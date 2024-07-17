@@ -1,7 +1,7 @@
 package com.dd5.combat_attaque;
 
 import com.dd5.enumeration.*;
-import com.dd5.LancerDesService;
+import com.dd5.ILancerDesService;
 import com.dd5.ResultatAttaque;
 import com.dd5.aleatoire.D20Service;
 import com.dd5.attaque.AttaqueEntity;
@@ -21,7 +21,7 @@ import static com.dd5.enumeration.MetaTypeDegatEnum.EFFETNORMAL;
 @Service
 @AllArgsConstructor
 public class AttaqueService implements IAttaqueService {
-    private final LancerDesService des;
+    private final ILancerDesService des;
     private final D20Service d20Service;
     private final IConditionService conditionService;
 

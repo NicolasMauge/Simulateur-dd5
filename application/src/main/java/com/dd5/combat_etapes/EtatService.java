@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class EtatService {
+public class EtatService implements IEtatService {
+    @Override
     public List<EtatProtagoniste> nouvelEtatSuiteAttaque(ResultatAttaque resultatAttaque,
                                                           List<EtatProtagoniste> etatProtagonisteList) {
         EtatProtagoniste dernierEtat = etatProtagonisteList.getLast();
@@ -22,7 +23,6 @@ public class EtatService {
         }
 
         // on copie les conditions et on ajoute la dernière à la fin
-        // TODO transformer en set
         Set<ConditionEnum> conditionList = new HashSet<>(dernierEtat.listeConditions());
         conditionList.add(resultatAttaque.getEtatSupplementaire());
 

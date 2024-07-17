@@ -19,6 +19,7 @@ public class D20Service implements ID20Service {
             case AVANTAGE -> Math.max(lanceUnDe(), lanceUnDe());
             case DESAVANTAGE -> Math.min(lanceUnDe(), lanceUnDe());
             case NEUTRE -> lanceUnDe();
+            case AUCUNE_ACTION -> 0;
         };
     }
 

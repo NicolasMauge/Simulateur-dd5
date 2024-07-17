@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class EquipesService {
+public class EquipesService implements IEquipesService {
     private final EquipesRepository equipesRepository;
     private final ProtagonisteService protagonisteService;
 
@@ -16,14 +16,17 @@ public class EquipesService {
         this.protagonisteService = protagonisteService;
     }
 
+    @Override
     public Equipes save(Equipes equipes) {
         return equipesRepository.save(equipes);
     }
 
+    @Override
     public Optional<Equipes> findById(Long id) {
         return equipesRepository.findById(id);
     }
 
+    @Override
     public Equipes reconstruireEquipes(Equipes equipes) {
         equipes.setEquipeA(equipes.getEquipeA()
                                         .stream()

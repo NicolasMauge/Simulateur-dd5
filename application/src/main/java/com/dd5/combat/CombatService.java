@@ -1,49 +1,55 @@
 package com.dd5.combat;
 
-import com.dd5.enumeration.AvantageEnum;
-import com.dd5.enumeration.StatutEquipeEnum;
-import com.dd5.enumeration.StatutProtagonisteEnum;
+import com.dd5.combat_etapes.IEtatService;
+import com.dd5.conditions.IConditionService;
+import com.dd5.enumeration.*;
 import com.dd5.ResultatAttaque;
 import com.dd5.combat_attaque.IAttaqueService;
 import com.dd5.caracteristiques.ICaracteristiquesService;
-import com.dd5.combat_etapes.EtatService;
 import com.dd5.protagoniste.Equipes;
 import com.dd5.protagoniste.ProtagonisteEntity;
 import com.dd5.protagonistes.ProtagonisteService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class CombatService implements ICombatService {
     private final IAttaqueService attaqueService;
     private final ICaracteristiquesService caracteristiquesService;
     private final ProtagonisteService protagonisteService;
-    private final PaireService paireService;
-    private final EtatService etatService;
-
-    public CombatService(IAttaqueService attaqueService,
-                         ICaracteristiquesService caracteristiquesService,
-                         ProtagonisteService protagonisteService, PaireService paireService, EtatService etatService) {
-        this.attaqueService = attaqueService;
-        this.caracteristiquesService = caracteristiquesService;
-        this.protagonisteService = protagonisteService;
-        this.paireService = paireService;
-        this.etatService = etatService;
-    }
+    private final IPaireService paireService;
+    private final IEtatService etatService;
+    private final IConditionService conditionService;
 
     @Override
     public ResultatAttaque lanceAttaque(ProtagonisteEntity attaquant,
                                          ProtagonisteEntity defenseur,
                                          EtatProtagoniste etatAttaquant,
                                          EtatProtagoniste etatDefenseur) {
-        //TODO est-ce que avantage ou désavantage en fonction etatAttaquant et etatDefenseur
+
+        Set<ConditionEnum> conditionsAttaquant = etatAttaquant.listeConditions();
+        Set<ConditionEnum> conditionsDefenseur = etatDefenseur.listeConditions();
+
+        // est-ce que l'attaquant peut attaquer
+        if (!conditionService.peutAgir(conditionsAttaquant)) {
+            return new ResultatAttaque(
+                    ResultatTestDDEnum.ECHEC,
+                    false,
+                    new ArrayList<>(),
+                    0,
+                    ConditionEnum.SANS_CONDITION);
+        }
+
+        AvantageEnum avantageAttaquant = conditionService.quelAvantageAttaquant(conditionsAttaquant, conditionsDefenseur);
 
         return attaqueService.lanceAttaque(
-                attaqueService.choisitAttaque(attaquant),
-                defenseur.getClasseArmure(),
-                caracteristiquesService.getReactionDegats(defenseur),
-                AvantageEnum.NEUTRE);
+                                        attaqueService.choisitAttaque(attaquant),
+                                        defenseur.getClasseArmure(),
+                                        caracteristiquesService.getReactionDegats(defenseur),
+                                        avantageAttaquant);
     }
 
     public TousLesProtagonistes commenceCombat(Equipes equipes) {
@@ -53,13 +59,11 @@ public class CombatService implements ICombatService {
         TousLesProtagonistes tousLesProtagonistes = protagonisteService.initialiseTousLesProtagonistes(equipes);
         tousLesProtagonistes.setListePaireAttaquantDefenseur(paireService.getPaireAttaquantDefenseur(equipes));
 
-        List<ProtagonisteEntity> protagonisteList = protagonisteService.findAll();
-
         while(
                 tousLesProtagonistes.getStatutEquipeA() == StatutEquipeEnum.VIVANTE &&
                 tousLesProtagonistes.getStatutEquipeB() == StatutEquipeEnum.VIVANTE) {
             // faire un round : faire tous les combats dans les paires
-            tousLesProtagonistes = faireUnRound(tousLesProtagonistes, protagonisteList);
+            tousLesProtagonistes = faireUnRound(tousLesProtagonistes);
 
             // vérifier que parmi les paires sont toujours valables sinon les modifier
 
@@ -86,8 +90,7 @@ public class CombatService implements ICombatService {
     }
 
     private TousLesProtagonistes faireUnRound(
-            TousLesProtagonistes tousLesProtagonistes,
-            List<ProtagonisteEntity> protagonisteList) {
+            TousLesProtagonistes tousLesProtagonistes) {
 
         tousLesProtagonistes.getListePaireAttaquantDefenseur()
                 .forEach(p -> {

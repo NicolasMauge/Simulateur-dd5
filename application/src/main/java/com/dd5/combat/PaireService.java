@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class PaireService {
+public class PaireService implements IPaireService {
+    @Override
     public List<PaireAttaquantDefenseur> getPaireAttaquantDefenseur(Equipes equipes) {
         // definition des paires pour le premier round
         List<ProtagonisteEntity> equipeA = new ArrayList<>(equipes.getEquipeA());

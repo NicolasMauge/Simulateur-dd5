@@ -8,6 +8,10 @@ public enum ConditionEnum {
     AVEUGLE("aveuglé"),
     PARALYSE("paralysé"),
     ENTRAVE("entravé"),
+    ETOURDI("étourdi"),
+    A_TERRE("à terre"),
+    PETRIFIE("pétrifié"),
+    CHARME("charmé"),
     SANS_CONDITION("pas de condition particulière");
 
     private final String condition;

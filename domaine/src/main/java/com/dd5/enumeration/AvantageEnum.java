@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum AvantageEnum {
     AVANTAGE("avantagé"),
     DESAVANTAGE("désavantagé"),
-    NEUTRE("ni avantagé, ni désavantagé");
+    NEUTRE("ni avantagé, ni désavantagé"),
+    AUCUNE_ACTION("aucune action possible");
 
     private final String typeAvantage;
 
