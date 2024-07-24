@@ -1,7 +1,7 @@
 package com.dd5.combat_etapes;
 
 import com.dd5.ResultatAttaque;
-import com.dd5.combat.EtatProtagoniste;
+import com.dd5.model.combat.EtatProtagoniste;
 
 import java.util.List;
 

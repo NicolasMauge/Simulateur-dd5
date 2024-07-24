@@ -1,7 +1,8 @@
 package com.dd5.combat;
 
-import com.dd5.protagoniste.Equipes;
-import com.dd5.protagoniste.ProtagonisteEntity;
+import com.dd5.entity.protagoniste.Equipes;
+import com.dd5.entity.protagoniste.ProtagonisteEntity;
+import com.dd5.model.combat.PaireAttaquantDefenseur;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

@@ -1,8 +1,10 @@
 package com.dd5.combat;
 
 import com.dd5.ResultatAttaque;
-import com.dd5.protagoniste.Equipes;
-import com.dd5.protagoniste.ProtagonisteEntity;
+import com.dd5.entity.protagoniste.Equipes;
+import com.dd5.entity.protagoniste.ProtagonisteEntity;
+import com.dd5.model.combat.EtatProtagoniste;
+import com.dd5.model.combat.TousLesProtagonistes;
 
 public interface ICombatService {
     ResultatAttaque lanceAttaque(ProtagonisteEntity attaquant,
@@ -11,4 +13,6 @@ public interface ICombatService {
                                  EtatProtagoniste etatDefenseur);
 
     TousLesProtagonistes commenceCombat(Equipes equipe);
+
+    TousLesProtagonistes faireUnRound(TousLesProtagonistes tousLesProtagonistes);
 }

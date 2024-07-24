@@ -7,7 +7,7 @@ public enum MetaTypeDegatEnum {
     RESISTANCE("résistance"),
     VULNERABILITE("vulnérabilité"),
     IMMUNITE("immunité"),
-    EFFETNORMAL("effet normal");
+    EFFET_NORMAL("effet normal");
 
     private final String typologie;
 

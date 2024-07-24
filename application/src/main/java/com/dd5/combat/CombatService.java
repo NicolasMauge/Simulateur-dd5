@@ -1,13 +1,17 @@
 package com.dd5.combat;
 
+import com.dd5.model.aleatoire.enumeration.ResultatTestDDEnum;
 import com.dd5.combat_etapes.IEtatService;
 import com.dd5.conditions.IConditionService;
 import com.dd5.enumeration.*;
 import com.dd5.ResultatAttaque;
 import com.dd5.combat_attaque.IAttaqueService;
 import com.dd5.caracteristiques.ICaracteristiquesService;
-import com.dd5.protagoniste.Equipes;
-import com.dd5.protagoniste.ProtagonisteEntity;
+import com.dd5.entity.protagoniste.Equipes;
+import com.dd5.entity.protagoniste.ProtagonisteEntity;
+import com.dd5.model.combat.EtatProtagoniste;
+import com.dd5.model.combat.EvolutionProtagoniste;
+import com.dd5.model.combat.TousLesProtagonistes;
 import com.dd5.protagonistes.ProtagonisteService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +22,6 @@ import java.util.*;
 @AllArgsConstructor
 public class CombatService implements ICombatService {
     private final IAttaqueService attaqueService;
-    private final ICaracteristiquesService caracteristiquesService;
     private final ProtagonisteService protagonisteService;
     private final IPaireService paireService;
     private final IEtatService etatService;
@@ -30,26 +33,26 @@ public class CombatService implements ICombatService {
                                          EtatProtagoniste etatAttaquant,
                                          EtatProtagoniste etatDefenseur) {
 
-        Set<ConditionEnum> conditionsAttaquant = etatAttaquant.listeConditions();
-        Set<ConditionEnum> conditionsDefenseur = etatDefenseur.listeConditions();
+        Set<ConditionEnum> conditionsAttaquant = etatAttaquant.setConditions();
+        Set<ConditionEnum> conditionsDefenseur = etatDefenseur.setConditions();
 
         // est-ce que l'attaquant peut attaquer
         if (!conditionService.peutAgir(conditionsAttaquant)) {
             return new ResultatAttaque(
                     ResultatTestDDEnum.ECHEC,
                     false,
-                    new ArrayList<>(),
+                    new HashSet<>(),
                     0,
-                    ConditionEnum.SANS_CONDITION);
+                    new HashSet<>());
         }
 
         AvantageEnum avantageAttaquant = conditionService.quelAvantageAttaquant(conditionsAttaquant, conditionsDefenseur);
 
         return attaqueService.lanceAttaque(
                                         attaqueService.choisitAttaque(attaquant),
-                                        defenseur.getClasseArmure(),
-                                        caracteristiquesService.getReactionDegats(defenseur),
-                                        avantageAttaquant);
+                                        avantageAttaquant,
+                                        defenseur
+                                        );
     }
 
     public TousLesProtagonistes commenceCombat(Equipes equipes) {
@@ -89,9 +92,8 @@ public class CombatService implements ICombatService {
         return tousLesProtagonistes;
     }
 
-    private TousLesProtagonistes faireUnRound(
-            TousLesProtagonistes tousLesProtagonistes) {
-
+    @Override
+    public TousLesProtagonistes faireUnRound(TousLesProtagonistes tousLesProtagonistes) {
         tousLesProtagonistes.getListePaireAttaquantDefenseur()
                 .forEach(p -> {
                     ProtagonisteEntity attaquant = p.attaquant();

@@ -1,13 +1,13 @@
 package com.dd5;
 
 import com.dd5.enumeration.ConditionEnum;
-import com.dd5.enumeration.ResultatTestDDEnum;
-import com.dd5.attaque.DegatParTypeAjuste;
+import com.dd5.model.aleatoire.enumeration.ResultatTestDDEnum;
+import com.dd5.model.attaque.DegatParTypeAjuste;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,7 +15,7 @@ import java.util.List;
 public class ResultatAttaque {
     private ResultatTestDDEnum resultat;
     private boolean toucheOuNon;
-    private List<DegatParTypeAjuste> degatParType;
+    private Set<DegatParTypeAjuste> degatParType;
     private int totalDegats;
-    private ConditionEnum etatSupplementaire;
+    private Set<ConditionEnum> setConditionsSupplementaires;
 }

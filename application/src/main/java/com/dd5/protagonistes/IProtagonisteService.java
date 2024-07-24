@@ -1,8 +1,8 @@
 package com.dd5.protagonistes;
 
-import com.dd5.combat.TousLesProtagonistes;
-import com.dd5.protagoniste.Equipes;
-import com.dd5.protagoniste.ProtagonisteEntity;
+import com.dd5.model.combat.TousLesProtagonistes;
+import com.dd5.entity.protagoniste.Equipes;
+import com.dd5.entity.protagoniste.ProtagonisteEntity;
 
 import java.util.List;
 

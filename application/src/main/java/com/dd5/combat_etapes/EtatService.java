@@ -3,11 +3,10 @@ package com.dd5.combat_etapes;
 import com.dd5.enumeration.ConditionEnum;
 import com.dd5.enumeration.StatutProtagonisteEnum;
 import com.dd5.ResultatAttaque;
-import com.dd5.combat.EtatProtagoniste;
+import com.dd5.model.combat.EtatProtagoniste;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,18 +22,18 @@ public class EtatService implements IEtatService {
         }
 
         // on copie les conditions et on ajoute la dernière à la fin
-        Set<ConditionEnum> conditionList = new HashSet<>(dernierEtat.listeConditions());
-        conditionList.add(resultatAttaque.getEtatSupplementaire());
+        Set<ConditionEnum> setConditions = dernierEtat.setConditions();
+        setConditions.addAll(resultatAttaque.getSetConditionsSupplementaires());
 
         int vie = dernierEtat.vie() - resultatAttaque.getTotalDegats();
 
-        List<EtatProtagoniste> etatProtagonisteListMutable = new ArrayList<>(etatProtagonisteList);
+        List<EtatProtagoniste> listeEtatsProtagoniste = new ArrayList<>(etatProtagonisteList);
 
-        etatProtagonisteListMutable.add(new EtatProtagoniste(
+        listeEtatsProtagoniste.add(new EtatProtagoniste(
                 vie,
-                conditionList,
+                setConditions,
                 (vie <=0)? StatutProtagonisteEnum.NEUTRALISE:StatutProtagonisteEnum.VIVANT));
 
-        return etatProtagonisteListMutable;
+        return listeEtatsProtagoniste;
     }
 }

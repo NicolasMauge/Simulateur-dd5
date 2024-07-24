@@ -1,6 +1,6 @@
 package com.dd5.protagonistes;
 
-import com.dd5.protagoniste.Equipes;
+import com.dd5.entity.protagoniste.Equipes;
 
 import java.util.Optional;
 

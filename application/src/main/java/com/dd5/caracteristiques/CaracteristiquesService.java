@@ -1,8 +1,9 @@
 package com.dd5.caracteristiques;
 
+import com.dd5.model.caracteristiques.enumeration.CaracteristiqueEnum;
 import com.dd5.enumeration.MetaTypeDegatEnum;
 import com.dd5.enumeration.TypeDegatEnum;
-import com.dd5.protagoniste.ProtagonisteEntity;
+import com.dd5.entity.protagoniste.ProtagonisteEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,18 @@ public class CaracteristiquesService implements ICaracteristiquesService {
         immmunites.forEach(r -> dictionnaire.put(r, MetaTypeDegatEnum.IMMUNITE));
 
         return dictionnaire;
+    }
+
+    @Override
+    public int getCaracteristique(ProtagonisteEntity p, CaracteristiqueEnum caracteristique) {
+        return switch(caracteristique) {
+            case FOR -> p.getCaracteristiques().getCaracteristiqueFor();
+            case DEX -> p.getCaracteristiques().getCaracteristiqueDex();
+            case CON -> p.getCaracteristiques().getCaracteristiqueCon();
+            case INT -> p.getCaracteristiques().getCaracteristiqueInt();
+            case SAG -> p.getCaracteristiques().getCaracteristiqueSag();
+            case CHA -> p.getCaracteristiques().getCaracteristiqueCha();
+        };
     }
 
     private List<TypeDegatEnum> getListeTypeDegatEnum(String champADecouper) {

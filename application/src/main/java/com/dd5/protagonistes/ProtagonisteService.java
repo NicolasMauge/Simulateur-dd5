@@ -2,11 +2,11 @@ package com.dd5.protagonistes;
 
 import com.dd5.enumeration.StatutEquipeEnum;
 import com.dd5.enumeration.StatutProtagonisteEnum;
-import com.dd5.combat.EtatProtagoniste;
-import com.dd5.combat.EvolutionProtagoniste;
-import com.dd5.combat.TousLesProtagonistes;
-import com.dd5.protagoniste.Equipes;
-import com.dd5.protagoniste.ProtagonisteEntity;
+import com.dd5.model.combat.EtatProtagoniste;
+import com.dd5.model.combat.EvolutionProtagoniste;
+import com.dd5.model.combat.TousLesProtagonistes;
+import com.dd5.entity.protagoniste.Equipes;
+import com.dd5.entity.protagoniste.ProtagonisteEntity;
 import com.dd5.protagoniste.ProtagonisteRepository;
 import org.springframework.stereotype.Service;
 

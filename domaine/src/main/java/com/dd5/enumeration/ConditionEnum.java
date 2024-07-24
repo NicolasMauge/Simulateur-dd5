@@ -12,6 +12,7 @@ public enum ConditionEnum {
     A_TERRE("à terre"),
     PETRIFIE("pétrifié"),
     CHARME("charmé"),
+    INCONSCIENT("inconscient"),
     SANS_CONDITION("pas de condition particulière");
 
     private final String condition;

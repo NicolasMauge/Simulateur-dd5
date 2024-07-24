@@ -2,7 +2,7 @@ package com.dd5.conditions;
 
 import com.dd5.enumeration.AvantageEnum;
 import com.dd5.enumeration.ConditionEnum;
-import com.dd5.attaque.AttaqueEntity;
+import com.dd5.entity.effets.AttaqueDeBaseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -10,7 +10,7 @@ import java.util.Set;
 @Service
 public class ConditionService implements IConditionService {
     @Override
-    public ConditionEnum getCondition(AttaqueEntity attaque) {
+    public ConditionEnum getCondition(AttaqueDeBaseEntity attaque) {
         return ConditionEnum.SANS_CONDITION;
     }
 
@@ -70,7 +70,7 @@ public class ConditionService implements IConditionService {
     private AvantageEnum attaquantAvantagePourConditionDefenseur(ConditionEnum conditionDefenseur) {
         return switch(conditionDefenseur) {
             case EMPOISONNE, CHARME, SANS_CONDITION -> AvantageEnum.NEUTRE;
-            case AVEUGLE, PARALYSE, ENTRAVE, ETOURDI, PETRIFIE, A_TERRE -> AvantageEnum.AVANTAGE;
+            case AVEUGLE, PARALYSE, ENTRAVE, ETOURDI, PETRIFIE, A_TERRE, INCONSCIENT -> AvantageEnum.AVANTAGE;
             // A_TERRE : on considère que l'assaillant est à < 1,5m
         };
     }
@@ -78,7 +78,7 @@ public class ConditionService implements IConditionService {
     private AvantageEnum attaquantDesavantagePourConditionAttaquant(ConditionEnum conditionAttaquant) {
         return switch(conditionAttaquant) {
             case EMPOISONNE, ENTRAVE, A_TERRE -> AvantageEnum.DESAVANTAGE;
-            case AVEUGLE, ETOURDI, PARALYSE, PETRIFIE, CHARME -> AvantageEnum.AUCUNE_ACTION;
+            case AVEUGLE, ETOURDI, PARALYSE, PETRIFIE, CHARME, INCONSCIENT -> AvantageEnum.AUCUNE_ACTION;
             case SANS_CONDITION -> AvantageEnum.NEUTRE;
         };
     }
@@ -93,7 +93,7 @@ public class ConditionService implements IConditionService {
     private boolean estIncapableDAttaquer(ConditionEnum conditionAttaquant) {
         return switch(conditionAttaquant) {
             case EMPOISONNE, ENTRAVE, A_TERRE, SANS_CONDITION -> false;
-            case AVEUGLE, ETOURDI, PARALYSE, PETRIFIE, CHARME -> true;
+            case AVEUGLE, ETOURDI, PARALYSE, PETRIFIE, CHARME, INCONSCIENT -> true;
         };
     }
 }
