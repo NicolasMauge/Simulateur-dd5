@@ -30,16 +30,6 @@ public class ChargementService {
 					} // Spécifie qu'il s'agit d'une liste de Personne
 			);
 
-//			OpposantJson opposantJson = opposantListe.stream()
-//					.filter(c -> c.getNomCreature().equals("Quasit"))
-//					.findFirst()
-//					.orElse(new OpposantJson());
-
-//			opposantListe.forEach(o -> {
-//				//System.out.println(o);
-//				//System.out.println(mapper.mapToOpposant(o));
-//				mapper.mapToOpposant(o);
-//			});
 			return opposantListe
 					.stream()
 					.map(mapper::mapToOpposant)

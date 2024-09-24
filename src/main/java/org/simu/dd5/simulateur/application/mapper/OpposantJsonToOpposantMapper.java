@@ -1,6 +1,7 @@
 package org.simu.dd5.simulateur.application.mapper;
 
 import lombok.AllArgsConstructor;
+import org.simu.dd5.simulateur.application.chargement.InitialisationService;
 import org.simu.dd5.simulateur.domaine.etats.SituationOpposant;
 import org.simu.dd5.simulateur.domaine.opposant.Opposant;
 import org.simu.dd5.simulateur.domaine.opposant.OpposantJson;
@@ -23,9 +24,11 @@ public class OpposantJsonToOpposantMapper {
 	private final CompetencesFromString competencesFromString;
 	private final DegatsFromString degatsFromString;
 	private final AttaqueJsonToAttaqueMapper mapper;
+	private final InitialisationService initialisationService;
 
 	public Opposant mapToOpposant(OpposantJson input) {
 		Opposant output = new Opposant(
+				UUID.randomUUID(),
 				input.getNomCreature(),
 				null,
 				getCaFromString(input.getCa()),
@@ -38,7 +41,7 @@ public class OpposantJsonToOpposantMapper {
 				degatsFromString.getEffetDegatsEnFonctionType(input.getResistancesAuxDegats(), input.getVulnerabilitesAuxDegats(), input.getImmunitesAuxDegats()),
 				getEtatsFromString(input.getImmunitesAuxEtats()),
 				mapper.mapToListeAttaque(input.getAttaqueListe()),
-				new SituationOpposant(9999, new HashMap<>(), new HashMap<>())
+				null
 		);
 
 		// ajouter les modificateurs de caractéristiques aux compétences
@@ -48,8 +51,7 @@ public class OpposantJsonToOpposantMapper {
 						.put(CompetenceEnum.fromCaracteristique(c), output.getValeurCaracteristique(c))
 				);
 
-
-		output.getSituationOpposant().setVie(output.getPointDeVie()!=null?output.getPointDeVie():-1);
+		output.reinitialiseSituation();
 
 		return output;
 	}

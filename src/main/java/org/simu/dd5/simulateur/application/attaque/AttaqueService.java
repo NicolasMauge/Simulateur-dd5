@@ -38,7 +38,7 @@ public class AttaqueService {
 			return lanceAttaqueAvecToucher(attaque, attaquant, defenseur);
 		}
 
-		// TODO si autre type de test nécessaire
+		// TODO si autre type de test nécessaire (ex : sauvegarde)
 
 		return ResultatAttaque.EN_ECHEC(null);
 	}

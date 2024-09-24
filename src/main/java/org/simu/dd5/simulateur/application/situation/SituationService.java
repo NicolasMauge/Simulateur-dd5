@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class SituationService {
 	public void miseAJourSituationOpposant(Opposant opposant, ResultatAttaque resultatAttaque) {
+		if(resultatAttaque == null) {
+			return;
+		}
+
 		if(resultatAttaque.getDegatsEtConditionAttaqueToucher() != null) {
 			miseAJourPour(opposant.getSituationOpposant(), resultatAttaque.getDegatsEtConditionAttaqueToucher());
 		}

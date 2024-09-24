@@ -1,10 +1,13 @@
 package org.simu.dd5.simulateur.domaine.opposant;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import lombok.ToString;
 import org.simu.dd5.simulateur.domaine.attaque.Attaque;
@@ -22,6 +25,8 @@ import org.simu.dd5.simulateur.domaine.general.typeenum.TypeRaceEnum;
 @Getter
 @ToString
 public class Opposant {
+	private UUID uuid;
+
 	private String nom;
 	private TypeRaceEnum espece;
 
@@ -96,6 +101,10 @@ public class Opposant {
 			case IMMUNITE -> 0;
 			case EFFET_NORMAL -> entryTypeDegatEtDegat.getValue();
 		};
+	}
+
+	public void reinitialiseSituation() {
+		situationOpposant = new SituationOpposant(pointDeVie!=null?pointDeVie:-1, new HashMap<>(), new HashMap<>());
 	}
 }
 
