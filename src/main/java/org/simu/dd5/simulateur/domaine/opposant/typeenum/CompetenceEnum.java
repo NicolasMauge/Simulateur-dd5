@@ -87,9 +87,9 @@ public enum CompetenceEnum {
 			case "survival" -> SURVIE;
 			case "history" -> HISTOIRE;
 			case "libérer" -> EVASION;
+			case "s'échapper" -> EVASION;
 
 			default -> throw new IllegalArgumentException("Aucune constante avec la valeur " + s + " n'a été trouvée.");
 		};
-
 	}
 }

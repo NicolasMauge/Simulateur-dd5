@@ -1,23 +1,41 @@
 package org.simu.dd5.simulateur.application.mapper;
 
 import lombok.AllArgsConstructor;
+import org.simu.dd5.simulateur.domaine.degats.Degats;
 import org.simu.dd5.simulateur.domaine.degats.EffetEchec;
 import org.simu.dd5.simulateur.domaine.degats.EffetEchecJson;
+import org.simu.dd5.simulateur.domaine.degats.typeenum.TypeDegatEnum;
+import org.simu.dd5.simulateur.domaine.etats.typeenum.EtatEnum;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 @Component
 @AllArgsConstructor
 public class EffetEchecJsonToEffetEchecMapper {
 	private final DegatsJsonToDegatsMapper degatsJsonToDegatsMapper;
+	private final EtatsFromString etatsFromString;
 
 	public EffetEchec mapToEffetEchec(EffetEchecJson effetEchecJson) {
 		if (effetEchecJson == null) {
 			return null;
 		}
 
+		if(effetEchecJson.getDegats() == null && effetEchecJson.getEtat() == null) {
+			return null;
+		}
+
+		Map<TypeDegatEnum, Degats> degats = degatsJsonToDegatsMapper.mapToListeDegats(effetEchecJson.getDegats());
+		List<EtatEnum> etatsListe = etatsFromString.getListeEtatFromStringListe(effetEchecJson.getEtat());
+
+		if(degats == null && etatsListe == null) {
+			return null;
+		}
+
 		return new EffetEchec(
-				degatsJsonToDegatsMapper.mapToListeDegats(effetEchecJson.getDegats()),
-				null // TODO
+				degats,
+				etatsListe
 		);
 	}
 }

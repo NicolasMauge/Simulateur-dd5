@@ -3,6 +3,7 @@ package org.simu.dd5.simulateur.application.round;
 import lombok.AllArgsConstructor;
 import org.simu.dd5.simulateur.application.attaque.AttaqueService;
 import org.simu.dd5.simulateur.application.attaque.ChoixAttaque;
+import org.simu.dd5.simulateur.application.elo.ClassementEloService;
 import org.simu.dd5.simulateur.application.situation.SituationService;
 import org.simu.dd5.simulateur.domaine.attaque.Attaque;
 import org.simu.dd5.simulateur.domaine.opposant.Opposant;
@@ -23,8 +24,9 @@ public class RoundService {
 	private final AttaqueService attaqueService;
 	private final SituationService situationService;
 	private final ChoixAttaque choixAttaque;
+	private final ClassementEloService classementEloService;
 
-	public ResultatPlusieursCombat lancePlusieursCombats(Opposant opposantA, Opposant opposantB, int nombreCombats) {
+	public ResultatPlusieursCombat lancePlusieursCombats(Opposant opposantA, Opposant opposantB, int nombreCombats) throws Exception {
 		if (opposantA == null || opposantB == null) {
 			logger.warn("Un des opposants est null : {}, {}", opposantA, opposantB);
 			return null;
@@ -50,17 +52,17 @@ public class RoundService {
 			opposantA.reinitialiseSituation();
 			opposantB.reinitialiseSituation();
 
-			UUID uuidGagnant = null;
-			while (uuidGagnant == null) {
-				uuidGagnant = lanceUnRound(opposantA, opposantB);
-			}
+			UUID uuidGagnant = faitUnCombat(opposantA, opposantB);
 
 			resultatPlusieursCombat.ajouteUnGagnant(uuidGagnant);
 		}
+
+		classementEloService.calculNouveauELO(opposantA, opposantB, resultatPlusieursCombat.gagnantGlobal());
+
 		return resultatPlusieursCombat;
 	}
 
-	public ResultatCombat lanceLeCombat(Opposant opposantA, Opposant opposantB) {
+	public ResultatCombat lanceLeCombat(Opposant opposantA, Opposant opposantB) throws Exception {
 		if (opposantA == null || opposantB == null) {
 			logger.warn("Un des opposants est null : {}, {}", opposantA, opposantB);
 			return null;
@@ -72,17 +74,37 @@ public class RoundService {
 				null
 		);
 
-		UUID uuidGagnant = null;
-		while (uuidGagnant == null) {
-			uuidGagnant = lanceUnRound(opposantA, opposantB);
-		}
+		UUID uuidGagnant = faitUnCombat(opposantA, opposantB);
 
 		resultatCombat.setGagnant(uuidGagnant);
 
 		return resultatCombat;
 	}
 
-	public UUID lanceUnRound(Opposant opposantA, Opposant opposantB) {
+	private UUID faitUnCombat(Opposant opposantA, Opposant opposantB) throws Exception {
+		UUID uuidGagnant = null;
+		while (uuidGagnant == null) {
+			if(opposantA.estIncapableDAgir() && opposantB.estIncapableDAgir()) {
+				logger.debug("Match null : {} est {} et {} est {}",
+						opposantA.getNom(), opposantA.getSituationOpposant().getEtatsMap(),
+						opposantB.getNom(), opposantB.getSituationOpposant().getEtatsMap());
+				break;
+			}
+
+			if(opposantA.getSituationOpposant().getAttaqueEnEchecSuccessives() >= 5 && opposantB.getSituationOpposant().getAttaqueEnEchecSuccessives() >= 5) {
+				logger.debug("Match null : {} et {} n'arrivent pas à faire aboutir leurs attaques",
+						opposantA.getNom(),
+						opposantB.getNom());
+				break;
+			}
+
+			uuidGagnant = lanceUnRound(opposantA, opposantB);
+		}
+
+		return uuidGagnant;
+	}
+
+	public UUID lanceUnRound(Opposant opposantA, Opposant opposantB) throws Exception {
 		demiRound(opposantA, opposantB);
 
 		if (opposantB.estNeutralise()) {
@@ -100,20 +122,30 @@ public class RoundService {
 		return null;
 	}
 
-	private void demiRound(Opposant attaquant, Opposant defenseur) {
+	private void demiRound(Opposant attaquant, Opposant defenseur) throws Exception {
 		Attaque attaque = choixAttaque.choisiUneAttaque(attaquant);
 
-		ResultatAttaque resultatAttaque = attaqueService.lanceAttaque(attaque, attaquant, defenseur);
+		if(!attaquant.estNeutralise() && !attaquant.estIncapableDAgir()) {
+			ResultatAttaque resultatAttaque = attaqueService.lanceAttaque(attaque, attaquant, defenseur);
 
-		logger.debug(">> {}", defenseur.getSituationOpposant());
-		//System.out.println(defenseur.getSituationOpposant());
-		logger.debug("Resultat de l'attaque de {} sur {} : {}", attaquant.getNom(), defenseur.getNom(), resultatAttaque);
+			logger.debug(">> {}", defenseur.getSituationOpposant());
+			//System.out.println(defenseur.getSituationOpposant());
+			logger.debug("Resultat de l'attaque de {} sur {} : {}", attaquant.getNom(), defenseur.getNom(), resultatAttaque);
 
-		if (resultatAttaque == null) {
-			return;
+			if (resultatAttaque == null || resultatAttaque.getTotalDegats() == 0) {
+				attaquant.getSituationOpposant().ajouteUneAttaqueRatee();
+			} else {
+				attaquant.getSituationOpposant().uneAttaqueAPorte();
+			}
+
+			if (resultatAttaque == null) {
+				return;
+			}
+
+			situationService.miseAJourSituationOpposant(defenseur, resultatAttaque);
+		} else {
+			attaquant.getSituationOpposant().ajouteUneAttaqueRatee();
 		}
-
-		situationService.miseAJourSituationOpposant(defenseur, resultatAttaque);
 
 		logger.debug("{} : >> {}", defenseur.getNom(), defenseur.getSituationOpposant());
 	}

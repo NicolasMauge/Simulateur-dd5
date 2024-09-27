@@ -5,24 +5,30 @@ import org.simu.dd5.simulateur.domaine.degats.typeenum.TypeDegatEnum;
 import org.simu.dd5.simulateur.domaine.opposant.Opposant;
 import org.simu.dd5.simulateur.domaine.resultat.SousResultatAttaque;
 import org.simu.dd5.simulateur.domaine.resultat.typeenum.ResultatTestDDEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class DegatsService {
-	public SousResultatAttaque quelsSontLesDegatsRecus(ResultatTestDDEnum resultatTest, List<Degats> degats, Opposant defenseur, boolean degatsAMultiplierParDeux) {
+	private static final Logger logger = LoggerFactory.getLogger(DegatsService.class);
+
+	public SousResultatAttaque quelsSontLesDegatsRecus(ResultatTestDDEnum resultatTest, Map<TypeDegatEnum, Degats> degats, Opposant defenseur, boolean degatsAMultiplierParDeux) {
+		if(degats == null || degats.isEmpty()) {
+			logger.warn("Les dégâts sont null");
+			return null;
+		}
+
 		// on récupère les dégâts
-		Map<TypeDegatEnum, Integer> degatsParType = degats
+		Map<TypeDegatEnum, Integer> degatsParType = degats.entrySet()
 				.stream()
 				.collect(Collectors.toMap(
-								Degats::getTypeDegats,
-								Degats::getValeurRandom
-						)
-				);
+								Map.Entry::getKey,
+								this::getValeurRandom));
 
 		if(degatsAMultiplierParDeux) {
 			degatsParType = degatsParType.entrySet()
@@ -50,5 +56,9 @@ public class DegatsService {
 
 	private Integer multipliePar2Value(Map.Entry<TypeDegatEnum, Integer> entry) {
 		return entry.getValue() * 2;
+	}
+
+	private Integer getValeurRandom(Map.Entry<TypeDegatEnum, Degats> entry){
+		return entry.getValue().getValeurRandom();
 	}
 }

@@ -51,8 +51,11 @@ public class DegatsFromString {
 		return null;
 	}
 
-	public Degats mapToDegats(DegatsJson degatsJson) {
-		if (degatsJson == null) {
+	public Map.Entry<TypeDegatEnum, Degats> mapToDegats(DegatsJson degatsJson) {
+		TypeDegatEnum typeDegat = convertitStringToTypeDegatEnum(degatsJson.getTypeDegats());
+
+		if(typeDegat == null) {
+			logger.warn("Le type de dégât ({}) n'a pas été reconnu", degatsJson.getTypeDegats());
 			return null;
 		}
 
@@ -63,11 +66,9 @@ public class DegatsFromString {
 			return null;
 		}
 
-		return new Degats(
-				valeurMoyenneDegat,
-				getNombreDeDes(degatsJson.getValeurDegats().toLowerCase()),
-				convertitStringToTypeDegatEnum(degatsJson.getTypeDegats())
-		);
+		NombreDeDes nombreDeDes = getNombreDeDes(degatsJson.getValeurDegats().toLowerCase());
+
+		return Map.entry(typeDegat, new Degats(valeurMoyenneDegat, nombreDeDes));
 	}
 
 	private NombreDeDes getNombreDeDes(String d) {

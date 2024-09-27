@@ -26,7 +26,7 @@ public enum EtatEnum {
 	INVISIBLE("invisible"),
 	SANS_CONDITION("pas de condition particulière");
 
-	private final String condition;
+	private final String etat;
 
 	public static EtatEnum fromValeur(String s) {
 		if(s.isEmpty()) {
@@ -34,7 +34,7 @@ public enum EtatEnum {
 		}
 
 		for (EtatEnum e : EtatEnum.values()) {
-			if (e.getCondition().equals(s) || Utils.remplacerAccents(e.getCondition()).equals(s) || e.getCondition().equals(s.substring(0,s.length()-1))) {
+			if (e.getEtat().equals(s) || Utils.remplacerAccents(e.getEtat()).equals(s) || e.getEtat().equals(s.substring(0,s.length()-1))) {
 				return e;
 			}
 		}

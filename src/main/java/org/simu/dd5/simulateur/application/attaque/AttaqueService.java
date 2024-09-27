@@ -27,7 +27,7 @@ public class AttaqueService {
 	private final AvantageService avantageService;
 	private final EffetService effetService;
 
-	public ResultatAttaque lanceAttaque(Attaque attaque, Opposant attaquant, Opposant defenseur) {
+	public ResultatAttaque lanceAttaque(Attaque attaque, Opposant attaquant, Opposant defenseur) throws Exception {
 		// est-ce que c'est une attaque avec touche ?
 		if (attaque.getTest() == null) {
 			logger.warn("L'attaque choisie n'a pas de test d'attaque : {}", attaque);
@@ -43,7 +43,7 @@ public class AttaqueService {
 		return ResultatAttaque.EN_ECHEC(null);
 	}
 
-	private ResultatAttaque lanceAttaqueAvecToucher(Attaque attaque, Opposant attaquant, Opposant defenseur) {
+	private ResultatAttaque lanceAttaqueAvecToucher(Attaque attaque, Opposant attaquant, Opposant defenseur) throws Exception {
 		// neutralisé
 		if(attaquant.estNeutralise()) {
 			logger.info("L'attaquant est neutralisé");
@@ -68,6 +68,12 @@ public class AttaqueService {
 		ResultatTestDDEnum tentativePourToucher = toucheOuNon(attaque.getTest(), defenseur.getClasseArmure(), avantageAttaquant);
 
 		if (tentativePourToucher.estReussie()) {
+			Effet effet = attaque.getEffet();
+			if (effet.getDegats() == null || effet.getDegats().isEmpty()) {
+				System.out.println(attaquant);
+				throw new Exception("On arrête");
+			}
+
 			return quelResultatSiAttaqueATouche(tentativePourToucher, attaque.getEffet(), defenseur);
 		}
 
@@ -90,7 +96,6 @@ public class AttaqueService {
 						resultatTest==ResultatTestDDEnum.REUSSITE_CRITIQUE)
 		);
 
-		//
 		if (effet.getTest() == null) {
 			return resultatAttaque;
 		}

@@ -29,4 +29,17 @@ public class ResultatAttaque {
 
 		return new ResultatAttaque(degatsEtConditionAttaqueToucher, degatsEtConditionEvasion);
 	}
+
+	public int getTotalDegats() {
+		int totalDegats = 0;
+		if(degatsEtConditionAttaqueToucher != null) {
+			totalDegats += degatsEtConditionAttaqueToucher.getTotalDegats();
+		}
+
+		if(degatsEtConditionEvasion != null) {
+			totalDegats += degatsEtConditionEvasion.getTotalDegats();
+		}
+
+		return totalDegats;
+	}
 }

@@ -48,4 +48,19 @@ public class ResultatPlusieursCombat {
 		}
 		return null;
 	}
+
+	public UUID gagnantGlobal() {
+		long nombreVictoireOpposantA = gagnantListe.stream().filter(g -> g == GagnantEnum.OPPOSANT_A).count();
+		long nombreVictoireOpposantB = gagnantListe.stream().filter(g -> g == GagnantEnum.OPPOSANT_B).count();
+
+		if(nombreVictoireOpposantA > nombreVictoireOpposantB) {
+			return uuidOpposantA;
+		}
+
+		if(nombreVictoireOpposantA < nombreVictoireOpposantB) {
+			return uuidOpposantB;
+		}
+
+		return null;
+	}
 }

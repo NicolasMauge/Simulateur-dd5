@@ -11,7 +11,7 @@ import java.util.UUID;
 @ToString
 public class ResultatCombat {
 	enum GagnantEnum {
-		OPPOSANT_A, OPPOSANT_B
+		OPPOSANT_A, OPPOSANT_B, MATCH_NULL
 	}
 
 	private UUID uuidOpposantA;
@@ -37,7 +37,10 @@ public class ResultatCombat {
 			}
 			if(uuidGagnant == uuidOpposantB) {
 				gagnant = GagnantEnum.OPPOSANT_B;
+				return;
 			}
 		}
+
+		gagnant = GagnantEnum.MATCH_NULL;
 	}
 }

@@ -36,7 +36,6 @@ public class EffetService {
 			return null;
 		}
 
-		// TODO : il faudra voir comment gérer les avantages des défenseurs lors d'un jet de sauvegarde
 		// est-ce que la tentative d'éviter ces effets supplémentaires est réussie ?
 		ResultatTestDDEnum tentativePourEviter = evadeSuiteJetSauvegarde(
 				jetSauvegarde,
@@ -51,7 +50,17 @@ public class EffetService {
 			return degatsPourEvasion(tentativePourEviter, effet.getEffetReussite(), effet.getEffetEchec(), defenseur);
 		}
 
-		return degatsService.quelsSontLesDegatsRecus(tentativePourEviter, effet.getEffetEchec().getDegats(), defenseur, false);
+		if(effet.getEffetEchec().getDegats() != null) {
+			return degatsService.quelsSontLesDegatsRecus(tentativePourEviter, effet.getEffetEchec().getDegats(), defenseur, false);
+		}
+
+		if(effet.getEffetEchec().getEtatListe() != null && !effet.getEffetEchec().getEtatListe().isEmpty()) {
+			// TODO : gérer les cas où les nouveaux états ne sont pas une liste mais une map (s'il y a une durée...)
+			return SousResultatAttaque.REUSSIE_SANS_EFFET().ajoutDesEtats(effet.getEffetEchec().getEtatListe());
+		}
+
+		logger.warn("Pas de dégât et pas de modification d'état : {}", effet.getEffetEchec());
+		return null;
 	}
 
 	private SousResultatAttaque degatsPourEvasion(ResultatTestDDEnum resultatTest, EffetReussite effetReussite, EffetEchec effetEchec, Opposant defenseur) {

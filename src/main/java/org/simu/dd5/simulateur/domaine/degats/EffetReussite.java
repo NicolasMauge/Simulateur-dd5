@@ -3,13 +3,14 @@ package org.simu.dd5.simulateur.domaine.degats;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import org.simu.dd5.simulateur.domaine.degats.typeenum.TypeDegatEnum;
 
-import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Getter
 @ToString
 public class EffetReussite {
 	private String degatsMinimum;
-	private List<Degats> degats;
+	private Map<TypeDegatEnum, Degats> degats;
 }

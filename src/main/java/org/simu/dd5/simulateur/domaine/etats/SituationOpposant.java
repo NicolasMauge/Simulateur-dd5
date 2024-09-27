@@ -21,6 +21,7 @@ public class SituationOpposant {
 	private int vie;
 	private Map<EtatEnum, Integer> etatsMap;
 	private Map<CompetenceEnum, AvantageEnum> avantageDefenseMap;
+	private int attaqueEnEchecSuccessives;
 
 	public boolean estIncapableDAgir() {
 		return etatsMap.keySet()
@@ -107,5 +108,13 @@ public class SituationOpposant {
 		}
 
 		this.etatsMap.put(k, v);
+	}
+
+	public void ajouteUneAttaqueRatee() {
+		attaqueEnEchecSuccessives += 1;
+	}
+
+	public void uneAttaqueAPorte() {
+		attaqueEnEchecSuccessives = 0;
 	}
 }

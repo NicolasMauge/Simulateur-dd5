@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.simu.dd5.simulateur.domaine.aleatoire.NombreDeDes;
-import org.simu.dd5.simulateur.domaine.degats.typeenum.TypeDegatEnum;
 
 @Getter
 @AllArgsConstructor
@@ -12,13 +11,12 @@ import org.simu.dd5.simulateur.domaine.degats.typeenum.TypeDegatEnum;
 public class Degats {
 	private int valeurDegatsMoyens;
 	private NombreDeDes nombreDeDesDegats;
-	private TypeDegatEnum typeDegats;
 
 	public Integer getValeurRandom() {
-		if(nombreDeDesDegats == null) {
+		if(nombreDeDesDegats == null && valeurDegatsMoyens == 0) {
 			return null;
 		}
 
-		return nombreDeDesDegats.getValeurRandom();
+		return nombreDeDesDegats != null ? nombreDeDesDegats.getValeurRandom() : valeurDegatsMoyens;
 	}
 }

@@ -1,15 +1,12 @@
 package org.simu.dd5.simulateur.domaine.opposant;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import lombok.ToString;
 import org.simu.dd5.simulateur.domaine.attaque.Attaque;
 import org.simu.dd5.simulateur.domaine.etats.SituationOpposant;
 import org.simu.dd5.simulateur.domaine.etats.typeenum.EstCeQueVivantEnum;
@@ -25,6 +22,8 @@ import org.simu.dd5.simulateur.domaine.general.typeenum.TypeRaceEnum;
 @Getter
 @ToString
 public class Opposant {
+	public static final int INITIAL_ELO = 1500;
+
 	private UUID uuid;
 
 	private String nom;
@@ -48,6 +47,9 @@ public class Opposant {
 	private List<Attaque> listeAttaques;
 
 	private SituationOpposant situationOpposant;
+
+	@Setter
+	private int classementELO;
 
 	public Integer getValeurCaracteristique(CaracteristiqueEnum caracteristique) {
 		return switch(caracteristique) {
@@ -104,7 +106,7 @@ public class Opposant {
 	}
 
 	public void reinitialiseSituation() {
-		situationOpposant = new SituationOpposant(pointDeVie!=null?pointDeVie:-1, new HashMap<>(), new HashMap<>());
+		situationOpposant = new SituationOpposant(pointDeVie!=null?pointDeVie:-1, new HashMap<>(), new HashMap<>(), 0);
 	}
 }
 
