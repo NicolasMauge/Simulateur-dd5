@@ -23,73 +23,90 @@ public class EffetService {
 	private final D20Service d20Service;
 	private final DegatsService degatsService;
 
-	public SousResultatAttaque quelResultatSiEffet(Effet effet, Opposant defenseur) {
-		JetSauvegarde jetSauvegarde = effet.getTest().getJetSauvegarde();
+//	public SousResultatAttaque quelResultatSiEffet(Effet effet, Opposant defenseur) {
+//		JetSauvegarde jetSauvegarde = effet.getTest().getJetSauvegarde();
+//
+//		// est-ce que la tentative d'éviter ces effets supplémentaires est réussie ?
+//		ResultatTestDDEnum tentativePourEviter = evadeSuiteJetSauvegarde(
+//				jetSauvegarde,
+//				defenseur.getValeurCompetence(jetSauvegarde.getCompetence()),
+//				defenseur.aUnAvantagePourTestSur(jetSauvegarde.getCompetence()));
+//
+//		if (tentativePourEviter.estReussie() && effet.getEffetReussite() == null) {
+//			return SousResultatAttaque.REUSSIE_SANS_EFFET();
+//		}
+//
+//		if (tentativePourEviter.estReussie()) {
+//			return degatsPourEvasion(tentativePourEviter, effet.getEffetReussite(), effet.getEffetEchec(), defenseur);
+//		}
+//
+//		if(effet.getEffetEchec().getDegats() != null) {
+//			return degatsService.quelsSontLesDegatsRecus(tentativePourEviter, effet.getEffetEchec().getDegats(), defenseur, false);
+//		}
+//
+//		if(effet.getEffetEchec().getEtatSet() != null && !effet.getEffetEchec().getEtatSet().isEmpty()) {
+//			// TODO : gérer les cas où les nouveaux états ne sont pas une liste mais une map (s'il y a une durée...)
+//			return SousResultatAttaque.REUSSIE_SANS_EFFET().ajoutDesEtats(effet.getEffetEchec().getEtatSet());
+//		}
+//
+//		logger.warn("Pas de dégât et pas de modification d'état : {}", effet.getEffetEchec());
+//		return null;
+//	}
 
-		if (jetSauvegarde == null) {
-			logger.warn("Ce n'est pas normal d'avoir un test sans jet de sauvegarde : {}", effet);
-			return null;
+//	private SousResultatAttaque degatsPourEvasion(ResultatTestDDEnum resultatTest, EffetReussite effetReussite, EffetEchec effetEchec, Opposant defenseur) {
+//		// Cas 1 : des dégâts sont spécifiés
+//		if (effetReussite.getDegats() != null) {
+//			return degatsService.quelsSontLesDegatsRecus(resultatTest, effetReussite.getDegats(), defenseur, false);
+//		}
+//
+//		// Cas 2 : les dégâts sont spécifiés sous forme de dégâts minimum
+//		if (!effetReussite.getDegatsMinimum().equals("MOITIE")) {
+//			logger.warn("Les dégâts minimum doit être égal à MOITIE : {}", effetReussite);
+//			return SousResultatAttaque.REUSSIE_SANS_EFFET();
+//		}
+//
+//		// on récupère les dégâts dans effetEchec
+//		if (effetEchec.getDegats() != null) {
+//			return degatsService.quelsSontLesDegatsRecus(resultatTest, effetEchec.getDegats(), defenseur, false).moitie();
+//		}
+//
+//		logger.warn("Les dégâts sont sensés être moitié des dégâts en échec, mais il n'y a pas de dégât en échec : {}", effetEchec);
+//		return SousResultatAttaque.REUSSIE_SANS_EFFET();
+//	}
+
+	public SousResultatAttaque quelEffetEvasion(ResultatTestDDEnum resultatTestDD, Effet effet, Opposant defenseur) {
+		if(resultatTestDD.estReussie()) {
+			return quelEffetReussite(effet.getEffetReussite(), effet.getEffetEchec(), defenseur);
+		} else {
+			return quelEffetEchec(effet.getEffetEchec(), defenseur);
 		}
-
-		if (effet.getEffetEchec() == null) {
-			logger.warn("Ce n'est pas normal d'avoir un test sans effet échec : {}", effet);
-			return null;
-		}
-
-		// est-ce que la tentative d'éviter ces effets supplémentaires est réussie ?
-		ResultatTestDDEnum tentativePourEviter = evadeSuiteJetSauvegarde(
-				jetSauvegarde,
-				defenseur.getValeurCompetence(jetSauvegarde.getCompetence()),
-				defenseur.aUnAvantagePourTestSur(jetSauvegarde.getCompetence()));
-
-		if (tentativePourEviter.estReussie() && effet.getEffetReussite() == null) {
-			return SousResultatAttaque.REUSSIE_SANS_EFFET();
-		}
-
-		if (tentativePourEviter.estReussie()) {
-			return degatsPourEvasion(tentativePourEviter, effet.getEffetReussite(), effet.getEffetEchec(), defenseur);
-		}
-
-		if(effet.getEffetEchec().getDegats() != null) {
-			return degatsService.quelsSontLesDegatsRecus(tentativePourEviter, effet.getEffetEchec().getDegats(), defenseur, false);
-		}
-
-		if(effet.getEffetEchec().getEtatListe() != null && !effet.getEffetEchec().getEtatListe().isEmpty()) {
-			// TODO : gérer les cas où les nouveaux états ne sont pas une liste mais une map (s'il y a une durée...)
-			return SousResultatAttaque.REUSSIE_SANS_EFFET().ajoutDesEtats(effet.getEffetEchec().getEtatListe());
-		}
-
-		logger.warn("Pas de dégât et pas de modification d'état : {}", effet.getEffetEchec());
-		return null;
 	}
 
-	private SousResultatAttaque degatsPourEvasion(ResultatTestDDEnum resultatTest, EffetReussite effetReussite, EffetEchec effetEchec, Opposant defenseur) {
-		if (effetReussite.getDegats() == null && effetReussite.getDegatsMinimum() == null) {
-			logger.warn("Il n'y a pas de dégats ou de dégâts minimum dans effet réussite : {}", effetReussite);
+	public SousResultatAttaque quelEffetEchec(EffetEchec effetEchec, Opposant defenseur) {
+		SousResultatAttaque sousResultatAttaque = SousResultatAttaque.ECHEC();
+
+		if(effetEchec.getDegats() != null) {
+			sousResultatAttaque = degatsService.quelDegats(ResultatTestDDEnum.ECHEC, effetEchec.getDegats(), defenseur, false);
+		}
+
+		if(effetEchec.getEtatSet() != null) {
+			sousResultatAttaque.ajoutDesEtats(effetEchec.getEtatSet());
+		}
+
+		return sousResultatAttaque;
+	}
+
+	public SousResultatAttaque quelEffetReussite(EffetReussite effetReussite, EffetEchec effetEchec, Opposant defenseur) {
+		if(effetReussite == null) {
 			return SousResultatAttaque.REUSSIE_SANS_EFFET();
 		}
 
-		// Cas 1 : des dégâts sont spécifiés
+		// si des dégâts sont définis
 		if (effetReussite.getDegats() != null) {
-			return degatsService.quelsSontLesDegatsRecus(resultatTest, effetReussite.getDegats(), defenseur, false);
+			return degatsService.quelDegats(ResultatTestDDEnum.REUSSITE, effetReussite.getDegats(), defenseur, false);
 		}
 
-		// Cas 2 : les dégâts sont spécifiés sous forme de dégâts minimum
-		if (!effetReussite.getDegatsMinimum().equals("MOITIE")) {
-			logger.warn("Les dégâts minimum doit être égal à MOITIE : {}", effetReussite);
-			return SousResultatAttaque.REUSSIE_SANS_EFFET();
-		}
-
-		// on récupère les dégâts dans effetEchec
-		if (effetEchec.getDegats() != null) {
-			return degatsService.quelsSontLesDegatsRecus(resultatTest, effetEchec.getDegats(), defenseur, false).moitie();
-		}
-
-		logger.warn("Les dégâts sont sensés être moitié des dégâts en échec, mais il n'y a pas de dégât en échec : {}", effetEchec);
-		return SousResultatAttaque.REUSSIE_SANS_EFFET();
-	}
-
-	private ResultatTestDDEnum evadeSuiteJetSauvegarde(JetSauvegarde jetSauvegarde, int bonus, AvantageEnum avantage) {
-		return d20Service.testDegreDifficulte(bonus, jetSauvegarde.getDd(), avantage);
+		// sinon, ce sont des dégâts minimum
+		return degatsService.quelDegats(ResultatTestDDEnum.REUSSITE, effetEchec.getDegats(), defenseur, false).moitie();
 	}
 }

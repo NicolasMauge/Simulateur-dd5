@@ -38,7 +38,7 @@ public class Opposant {
 
 	private Map<CompetenceEnum, Integer> competenceList;
 
-	private Integer bonusDeMaitrise;
+	private int bonusDeMaitrise;
 
 	private Map<TypeDegatEnum, TypeEffetDegatsEnum> effetDegatsEnFonctionType;
 

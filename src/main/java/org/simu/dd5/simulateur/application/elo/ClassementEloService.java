@@ -29,8 +29,8 @@ public class ClassementEloService {
 		int nouveauClassementOpposantA = calculateNewRating(opposantA.getClassementELO(), score1, expectedScore1);
 		int nouveauClassementOpposantB = calculateNewRating(opposantB.getClassementELO(), score2, expectedScore2);
 
-		opposantA.setClassementELO(nouveauClassementOpposantA);
-		opposantB.setClassementELO(nouveauClassementOpposantB);
+		opposantA.setClassementELO(Math.max(nouveauClassementOpposantA, 0));
+		opposantB.setClassementELO(Math.max(nouveauClassementOpposantB, 0));
 
 		logger.debug("{} a pour nouveau ELO : {}", opposantA.getNom(), opposantA.getClassementELO());
 		logger.debug("{} a pour nouveau ELO : {}", opposantB.getNom(), opposantB.getClassementELO());

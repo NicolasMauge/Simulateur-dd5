@@ -10,9 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @AllArgsConstructor
 @RestController
@@ -77,7 +75,11 @@ public class ChargementController {
 		}
 		//}
 
-		opposantListe.forEach(o -> System.out.println(o.getNom() + " : " + o.getClassementELO()));
-		System.out.println();
+		opposantListe
+				.stream()
+				.filter(Objects::nonNull)
+				.sorted(Comparator.comparing(Opposant::getClassementELO).reversed())
+				.toList()
+				.forEach(o -> System.out.println(o.getNom() + " : " + o.getClassementELO()));
 	}
 }

@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -38,6 +39,7 @@ public class ChargementService {
 
 			return opposantListe
 					.stream()
+					.filter(Objects::nonNull)
 					.map(mapper::mapToOpposant)
 					.filter(this::filtreOpposant)
 					.toList();
@@ -51,6 +53,7 @@ public class ChargementService {
 		try {
 			return getObjectMapper().treeToValue(rootNode, OpposantJson.class);
 		} catch (JsonProcessingException e) {
+			logger.error("Erreur sur {} : ", rootNode, e);
 			return null;
 		}
 	}
@@ -84,7 +87,7 @@ public class ChargementService {
 		if(opposant.getListeAttaques().stream().anyMatch(
 				a -> {
 					if(a.getEffet() != null && a.getEffet().getEffetEchec() != null) {
-						return a.getEffet().getEffetEchec().getDegats() == null && (a.getEffet().getEffetEchec().getEtatListe() == null || a.getEffet().getEffetEchec().getEtatListe().isEmpty());
+						return a.getEffet().getEffetEchec().getDegats() == null && (a.getEffet().getEffetEchec().getEtatSet() == null || a.getEffet().getEffetEchec().getEtatSet().isEmpty());
 					}
 					return false;
 				}
@@ -95,9 +98,7 @@ public class ChargementService {
 		}
 
 		if(opposant.getListeAttaques().stream().anyMatch(
-				a -> {
-					return a.getEffet() != null && a.getEffet().getTest() != null && a.getEffet().getTest().getJetSauvegarde() == null;
-				}
+				a -> a.getEffet() != null && a.getEffet().getTest() != null && a.getEffet().getTest().getJetSauvegarde() == null
 		)) {
 			logger.warn("On enlève le monstre {} car il manque le jet de sauvegarde dans le test", opposant.getNom());
 
@@ -107,9 +108,7 @@ public class ChargementService {
 		System.out.println(opposant.getNom());
 
 		if(opposant.getListeAttaques().stream().anyMatch(
-				a -> {
-					return a.getEffet() != null && a.getEffet().getTest() != null && a.getEffet().getEffetEchec() == null;
-				}
+				a -> a.getEffet() != null && a.getEffet().getTest() != null && a.getEffet().getEffetEchec() == null
 		)) {
 			return false;
 		}

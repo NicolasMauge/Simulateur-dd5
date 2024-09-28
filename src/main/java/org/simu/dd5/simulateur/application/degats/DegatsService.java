@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class DegatsService {
 	private static final Logger logger = LoggerFactory.getLogger(DegatsService.class);
 
-	public SousResultatAttaque quelsSontLesDegatsRecus(ResultatTestDDEnum resultatTest, Map<TypeDegatEnum, Degats> degats, Opposant defenseur, boolean degatsAMultiplierParDeux) {
+	public SousResultatAttaque quelDegats(ResultatTestDDEnum resultatTest, Map<TypeDegatEnum, Degats> degats, Opposant defenseur, boolean degatsAMultiplierParDeux) {
 		if(degats == null || degats.isEmpty()) {
 			logger.warn("Les dégâts sont null");
 			return null;
@@ -60,5 +60,31 @@ public class DegatsService {
 
 	private Integer getValeurRandom(Map.Entry<TypeDegatEnum, Degats> entry){
 		return entry.getValue().getValeurRandom();
+	}
+
+	private Integer getValeurMoyenne(Map.Entry<TypeDegatEnum, Degats> entry) {
+		return entry.getValue().getValeurMoyenne();
+	}
+
+	public Map<TypeDegatEnum, Integer> quelsDegatsMoyens(Map<TypeDegatEnum, Degats> degats, Opposant defenseur) {
+		if(degats == null) {
+			logger.debug("Il n'y a pas de dégât associés à l'attaque");
+			return new HashMap<>();
+		}
+
+		// on récupère les dégâts
+		Map<TypeDegatEnum, Integer> degatsParType = degats.entrySet()
+				.stream()
+				.collect(Collectors.toMap(
+						Map.Entry::getKey,
+						this::getValeurMoyenne));
+
+		// on modifie ces dégâts en fonction des particularités du défenseur
+		return degatsParType.entrySet()
+				.stream()
+				.collect(Collectors.toMap(
+						Map.Entry::getKey,
+						defenseur::quelDegatAjuste
+				));
 	}
 }

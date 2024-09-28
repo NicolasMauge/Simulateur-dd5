@@ -7,8 +7,8 @@ import org.simu.dd5.simulateur.domaine.degats.typeenum.TypeDegatEnum;
 import org.simu.dd5.simulateur.domaine.etats.typeenum.EtatEnum;
 import org.simu.dd5.simulateur.domaine.resultat.typeenum.ResultatTestDDEnum;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -48,13 +48,15 @@ public class SousResultatAttaque {
 		return new SousResultatAttaque(ResultatTestDDEnum.REUSSITE, null, null, null);
 	}
 
-	public SousResultatAttaque ajoutDesEtats(List<EtatEnum> etatsListe) {
+	public static SousResultatAttaque ECHEC() {
+		return new SousResultatAttaque(ResultatTestDDEnum.ECHEC, null, null, null);
+	}
+
+	public void ajoutDesEtats(Set<EtatEnum> etatsListe) {
 		etatsSupplementairesMap = etatsListe
 				.stream()
 				.collect(Collectors.toMap(
 						e -> e,
 						_ -> 1));
-
-		return this;
 	}
 }

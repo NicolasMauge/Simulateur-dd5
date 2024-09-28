@@ -1,7 +1,6 @@
 package org.simu.dd5.simulateur.application.mapper;
 
 import lombok.AllArgsConstructor;
-import org.simu.dd5.simulateur.application.chargement.InitialisationService;
 import org.simu.dd5.simulateur.domaine.opposant.Opposant;
 import org.simu.dd5.simulateur.domaine.opposant.OpposantJson;
 import org.simu.dd5.simulateur.domaine.opposant.typeenum.CompetenceEnum;
@@ -35,7 +34,7 @@ public class OpposantJsonToOpposantMapper {
 				input.getVitesse(),
 				caracteristiquesFromString.getCaracteristiquesFromStrings(input),
 				competencesFromString.getCompetenceListFromString(input.getCompetences()),
-				null,
+				0, // TODO : mettre en place bonus de maîtrise
 				degatsFromString.getEffetDegatsEnFonctionType(input.getResistancesAuxDegats(), input.getVulnerabilitesAuxDegats(), input.getImmunitesAuxDegats()),
 				getEtatsFromString(input.getImmunitesAuxEtats()),
 				mapper.mapToListeAttaque(input.getAttaqueListe()),

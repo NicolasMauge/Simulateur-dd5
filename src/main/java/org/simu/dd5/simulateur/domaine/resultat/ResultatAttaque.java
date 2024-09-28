@@ -18,6 +18,10 @@ public class ResultatAttaque {
 				);
 	}
 
+	public static ResultatAttaque EST_UN_TRAIT() {
+		return new ResultatAttaque(null, null);
+	}
+
 	public ResultatAttaque(SousResultatAttaque degatsEtConditionAttaqueToucher) {
 		this.degatsEtConditionAttaqueToucher = degatsEtConditionAttaqueToucher;
 	}

@@ -6,13 +6,9 @@ import org.simu.dd5.simulateur.application.avantages.AvantageService;
 import org.simu.dd5.simulateur.application.degats.DegatsService;
 import org.simu.dd5.simulateur.application.effet.EffetService;
 import org.simu.dd5.simulateur.domaine.attaque.Attaque;
-import org.simu.dd5.simulateur.domaine.degats.Effet;
 import org.simu.dd5.simulateur.domaine.opposant.Opposant;
-import org.simu.dd5.simulateur.domaine.opposant.typeenum.AvantageEnum;
 import org.simu.dd5.simulateur.domaine.resultat.ResultatAttaque;
-import org.simu.dd5.simulateur.domaine.resultat.SousResultatAttaque;
 import org.simu.dd5.simulateur.domaine.resultat.typeenum.ResultatTestDDEnum;
-import org.simu.dd5.simulateur.domaine.touche.DDTestReussite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,94 +18,37 @@ import org.springframework.stereotype.Service;
 public class AttaqueService {
 	private static final Logger logger = LoggerFactory.getLogger(AttaqueService.class);
 
-	private final D20Service d20Service;
-	private final DegatsService degatsService;
-	private final AvantageService avantageService;
 	private final EffetService effetService;
+	private final AttaqueToucherService attaqueToucherService;
+	private final AttaqueEvasionService attaqueEvasionService;
 
-	public ResultatAttaque lanceAttaque(Attaque attaque, Opposant attaquant, Opposant defenseur) throws Exception {
+	public ResultatAttaque lanceAttaque(Attaque attaque, Opposant attaquant, Opposant defenseur) {
 		// est-ce que c'est une attaque avec touche ?
-		if (attaque.getTest() == null) {
-			logger.warn("L'attaque choisie n'a pas de test d'attaque : {}", attaque);
+		if (attaque.estNonCoherente()) {
+			logger.warn("L'attaque choisie n'est pas cohérente");
 			return null;
 		}
 
-		if (estAttaqueAvecToucher(attaque)) {
-			return lanceAttaqueAvecToucher(attaque, attaquant, defenseur);
-		}
-
-		// TODO si autre type de test nécessaire (ex : sauvegarde)
-
-		return ResultatAttaque.EN_ECHEC(null);
-	}
-
-	private ResultatAttaque lanceAttaqueAvecToucher(Attaque attaque, Opposant attaquant, Opposant defenseur) throws Exception {
 		// neutralisé
 		if(attaquant.estNeutralise()) {
-			logger.info("L'attaquant est neutralisé");
+			logger.debug("L'attaquant est neutralisé");
 			return ResultatAttaque.EN_ECHEC(null);
 		}
 
 		// incapable d'agir
 		if (attaquant.estIncapableDAgir()) {
-			logger.info("L'attaquant est incapable d'agir");
+			logger.debug("L'attaquant est incapable d'agir");
 			return ResultatAttaque.EN_ECHEC(null);
 		}
 
-		// pour une attaque avec touché, il faut avoir un effet
-		if (attaque.getEffet() == null) {
-			logger.warn("Il n'y a pas d'effet pour l'attaque {}", attaque);
-			return ResultatAttaque.EN_ECHEC(null);
-		}
-
-		AvantageEnum avantageAttaquant = avantageService.syntheseAvantagePourAttaquant(attaquant, defenseur);
-
-		// est-ce que l'attaque touche ?
-		ResultatTestDDEnum tentativePourToucher = toucheOuNon(attaque.getTest(), defenseur.getClasseArmure(), avantageAttaquant);
-
-		if (tentativePourToucher.estReussie()) {
-			Effet effet = attaque.getEffet();
-			if (effet.getDegats() == null || effet.getDegats().isEmpty()) {
-				System.out.println(attaquant);
-				throw new Exception("On arrête");
+		return switch (attaque.estDeQuelType()) {
+			case ATTAQUE_AVEC_TOUCHER -> attaqueToucherService.lanceAttaqueAvecToucher(attaque, attaquant, defenseur);
+			case EVASION -> {
+				ResultatTestDDEnum resultatTest = attaqueEvasionService.lancerUnTestEvasion(attaque.getTest(), defenseur);
+				yield new ResultatAttaque(effetService.quelEffetEvasion(resultatTest, attaque.getEffet(), defenseur));
 			}
-
-			return quelResultatSiAttaqueATouche(tentativePourToucher, attaque.getEffet(), defenseur);
-		}
-
-		// pour ce type d'attaque, il n'y a pas d'effet en cas d'échec du test
-		return ResultatAttaque.EN_ECHEC(tentativePourToucher);
-	}
-
-	private ResultatAttaque quelResultatSiAttaqueATouche(ResultatTestDDEnum resultatTest, Effet effet, Opposant defenseur) {
-		if (effet.getDegats() == null || effet.getDegats().isEmpty()) {
-			logger.warn("Il n'y a pas de dégâts associées à l'attaque {}", effet);
-			return ResultatAttaque.EN_ECHEC(resultatTest);
-		}
-
-		// les dégâts pour l'attaque avec 'touché'
-		ResultatAttaque resultatAttaque = new ResultatAttaque(
-				degatsService.quelsSontLesDegatsRecus(
-						resultatTest,
-						effet.getDegats(),
-						defenseur,
-						resultatTest==ResultatTestDDEnum.REUSSITE_CRITIQUE)
-		);
-
-		if (effet.getTest() == null) {
-			return resultatAttaque;
-		}
-
-		SousResultatAttaque resultatAttaqueEffet = effetService.quelResultatSiEffet(effet, defenseur);
-
-		return resultatAttaque.ajouteResultatAttaqueEvasion(resultatAttaqueEffet);
-	}
-
-	private ResultatTestDDEnum toucheOuNon(DDTestReussite test, int classeArmure, AvantageEnum avantage) {
-		return d20Service.testDegreDifficulte(test.getBonusToucher(), classeArmure, avantage);
-	}
-
-	private boolean estAttaqueAvecToucher(Attaque attaque) {
-		return attaque.getTest() != null && attaque.getTest().getBonusToucher() != null;
+			case TRAITS -> ResultatAttaque.EST_UN_TRAIT();
+			case NON_DEFINIE -> ResultatAttaque.EN_ECHEC(null);
+		};
 	}
 }

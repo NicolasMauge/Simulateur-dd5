@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.simu.dd5.simulateur.domaine.degats.EffetEchecJson;
 import org.simu.dd5.simulateur.domaine.degats.EffetJson;
+import org.simu.dd5.simulateur.domaine.degats.EffetReussiteJson;
 import org.simu.dd5.simulateur.domaine.touche.DDTestReussiteJson;
 
 @Setter
@@ -21,4 +23,8 @@ public class AttaqueJson {
 	private String nomAttaque;
 	private DDTestReussiteJson test;
 	private EffetJson effet;
+	@JsonProperty("effet-echec")
+	private EffetEchecJson effetEchec;
+	@JsonProperty("effet-reussite")
+	private EffetReussiteJson effetReussite;
 }

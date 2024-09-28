@@ -13,18 +13,21 @@ import java.util.stream.Collectors;
 public class AttaqueJsonToAttaqueMapper {
 	private final DDTestReussiteJsonToDDTestReussiteMapper ddTestReussiteJsonToDDTestReussiteMapper;
 	private final EffetJsonToEffetMapper effetJsonToEffetMapper;
+	private final EffetEchecJsonToEffetEchecMapper effetEchecJsonToEffetEchecMapper;
+	private final EffetReussiteJsonToEffetReussiteMapper effetReussiteJsonToEffetReussiteMapper;
 
-	// TODO : ajouter un contrôle : normalement, aucun effetEchec si test de type toucher
-	//
 	public Attaque mapToAttaque(AttaqueJson attaqueJson) {
 		if (attaqueJson == null) {
 			return null;
 		}
+
 		return new Attaque(
 				attaqueJson.getTypeAction(),
 				attaqueJson.getNomAttaque(),
 				ddTestReussiteJsonToDDTestReussiteMapper.mapToDDTestReussite(attaqueJson.getTest()),
-				effetJsonToEffetMapper.mapToEffet(attaqueJson.getEffet())
+				effetJsonToEffetMapper.mapToEffet(attaqueJson.getEffet()),
+				effetEchecJsonToEffetEchecMapper.mapToEffetEchec(attaqueJson.getEffetEchec()),
+				effetReussiteJsonToEffetReussiteMapper.mapToEffetReussite(attaqueJson.getEffetReussite())
 		);
 	}
 

@@ -8,8 +8,8 @@ import org.simu.dd5.simulateur.domaine.degats.typeenum.TypeDegatEnum;
 import org.simu.dd5.simulateur.domaine.etats.typeenum.EtatEnum;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public class EffetEchecJsonToEffetEchecMapper {
 		}
 
 		Map<TypeDegatEnum, Degats> degats = degatsJsonToDegatsMapper.mapToListeDegats(effetEchecJson.getDegats());
-		List<EtatEnum> etatsListe = etatsFromString.getListeEtatFromStringListe(effetEchecJson.getEtat());
+		Set<EtatEnum> etatsListe = etatsFromString.getListeEtatFromStringListe(effetEchecJson.getEtat());
 
 		if(degats == null && etatsListe == null) {
 			return null;
