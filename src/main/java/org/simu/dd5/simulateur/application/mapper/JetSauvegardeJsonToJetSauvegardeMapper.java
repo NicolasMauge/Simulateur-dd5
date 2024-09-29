@@ -18,7 +18,7 @@ public class JetSauvegardeJsonToJetSauvegardeMapper {
 
 		try {
 			CompetenceEnum competence = CompetenceEnum.fromValeur(jetSauvegardeJson.getCompetence().toLowerCase());
-			Integer dd = integerFromString(jetSauvegardeJson.getDd());
+			Integer dd = ConversionsUtils.integerFromString(jetSauvegardeJson.getDd());
 
 			if (competence != null && dd != null) {
 				return new JetSauvegarde(competence, dd);
@@ -29,18 +29,5 @@ public class JetSauvegardeJsonToJetSauvegardeMapper {
 		}
 		logger.debug("La compétence ({}) ou le degré de difficulté ({}) ne sont pas convertible", jetSauvegardeJson.getCompetence(), jetSauvegardeJson.getDd());
 		return null;
-	}
-
-	private Integer integerFromString(String s) {
-		if (s == null) {
-			return null;
-		}
-
-		try {
-			return Integer.parseInt(s.trim());
-		} catch (NumberFormatException e) {
-			logger.debug("Erreur de conversion de {} en Integer", s);
-			return null;
-		}
 	}
 }

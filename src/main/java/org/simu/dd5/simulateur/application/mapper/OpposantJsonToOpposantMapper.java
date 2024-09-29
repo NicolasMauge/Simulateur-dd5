@@ -34,9 +34,11 @@ public class OpposantJsonToOpposantMapper {
 				input.getVitesse(),
 				caracteristiquesFromString.getCaracteristiquesFromStrings(input),
 				competencesFromString.getCompetenceListFromString(input.getCompetences()),
-				0, // TODO : mettre en place bonus de maîtrise
+				Objects.requireNonNullElse(ConversionsUtils.integerFromString(input.getBonusDeMaitrise()), 0),
 				degatsFromString.getEffetDegatsEnFonctionType(input.getResistancesAuxDegats(), input.getVulnerabilitesAuxDegats(), input.getImmunitesAuxDegats()),
 				getEtatsFromString(input.getImmunitesAuxEtats()),
+				convertDangerosite(input.getDangerosite()),
+				0,
 				mapper.mapToListeAttaque(input.getAttaqueListe()),
 				null,
 				Opposant.INITIAL_ELO
@@ -55,14 +57,47 @@ public class OpposantJsonToOpposantMapper {
 	}
 
 
+
+	private int convertDangerosite(String dangerosite) {
+		int position = dangerosite.indexOf("(");
+
+		if(position != -1) {
+			dangerosite = dangerosite.substring(0, position).trim();
+		}
+
+		switch (dangerosite) {
+            case "1/8", "0.125" -> {
+                return 1;
+            }
+            case "1/4", "0.25" -> {
+                return 2;
+            }
+            case "1/2", "0.5" -> {
+                return 4;
+            }
+
+			default -> {
+				Integer dangerositeConvertie = ConversionsUtils.integerFromString(dangerosite);
+				if(dangerositeConvertie != null) {
+					return 8*dangerositeConvertie;
+				}
+				else {
+					return -1;
+				}
+			}
+        }
+
+
+    }
+
 	private Integer getCaFromString(String ca) {
 		int position = ca.indexOf("(");
 
 		if (position != -1) {
-			return integerFromString(ca.substring(0, position).trim());
+			return ConversionsUtils.integerFromString(ca.substring(0, position).trim());
 		}
 
-		return integerFromString(ca);
+		return ConversionsUtils.integerFromString(ca);
 	}
 
 
@@ -96,23 +131,10 @@ public class OpposantJsonToOpposantMapper {
 		if (position != -1) {
 			String vieToConvert = vie.substring(0, position).trim();
 
-			return integerFromString(vieToConvert);
+			return ConversionsUtils.integerFromString(vieToConvert);
 		}
 
 		logger.debug("Il n'y a pas de parenthèse dans {}", vie);
 		return null;
-	}
-
-	private Integer integerFromString(String s) {
-		if (s == null) {
-			return null;
-		}
-
-		try {
-			return Integer.parseInt(s.trim());
-		} catch (NumberFormatException e) {
-			logger.debug("Erreur de conversion de {} en Integer", s);
-			return null;
-		}
 	}
 }

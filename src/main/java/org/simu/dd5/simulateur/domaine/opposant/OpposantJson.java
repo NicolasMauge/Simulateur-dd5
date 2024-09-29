@@ -46,6 +46,8 @@ public class OpposantJson {
 	private String vulnerabilitesAuxDegats;
 
 	private String dangerosite;
+	@JsonProperty("bonus_de_maitrise")
+	private String bonusDeMaitrise;
 
 	//@JsonIgnore
 	@JsonProperty("liste-attaques")

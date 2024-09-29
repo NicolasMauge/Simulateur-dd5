@@ -52,7 +52,12 @@ public class ChargementService {
 
 		System.out.println("---------------------------------------");
 		System.out.println("Erreurs de mappings : ");
-		System.out.println(resultatMapping.getErreurMappingListe());
+		if(resultatMapping.getErreurMappingListe().size() > 10) {
+			System.out.println("Nombre d'erreurs > 10, affichage du premier");
+			System.out.println(resultatMapping.getErreurMappingListe().getFirst());
+		} else {
+			System.out.println(resultatMapping.getErreurMappingListe());
+		}
 
 		// filtrage
 		logger.info("Il y a {} créatures exclues car non complètes", resultatMapping.getOpposantListe().stream()

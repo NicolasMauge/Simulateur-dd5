@@ -28,19 +28,6 @@ public class DDTestReussiteJsonToDDTestReussiteMapper {
 	}
 
 	private Integer bonusToucherFromString(String b) {
-		return integerFromString(b);
-	}
-
-	private Integer integerFromString(String s) {
-		if (s == null) {
-			return null;
-		}
-
-		try {
-			return Integer.parseInt(s.trim());
-		} catch (NumberFormatException e) {
-			logger.debug("Erreur de conversion de {} en Integer", s);
-			return null;
-		}
+		return ConversionsUtils.integerFromString(b);
 	}
 }

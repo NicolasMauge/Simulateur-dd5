@@ -44,6 +44,10 @@ public class Opposant {
 
 	private List<EtatEnum> immuniteEtats;
 
+	private int dangerosite;
+	@Setter
+	private double dangerositeNormee;
+
 	private List<Attaque> listeAttaques;
 
 	private SituationOpposant situationOpposant;

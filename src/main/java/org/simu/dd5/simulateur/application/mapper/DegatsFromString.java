@@ -87,7 +87,7 @@ public class DegatsFromString {
 		}
 
 		// 5 (1d4 + 3) -> 5
-		Integer nombreDes = integerFromString(d.substring(positionParentheseGauche+1, positionD).trim());
+		Integer nombreDes = ConversionsUtils.integerFromString(d.substring(positionParentheseGauche+1, positionD).trim());
 
 		if(nombreDes == null) {
 			return null;
@@ -115,7 +115,7 @@ public class DegatsFromString {
 
 		Integer complement;
 		if(complementString != null) {
-			complement = integerFromString(complementString);
+			complement = ConversionsUtils.integerFromString(complementString);
 			if(complement == null) {
 				complement = 0;
 			}
@@ -132,22 +132,9 @@ public class DegatsFromString {
 		if (position != -1) {
 			String degatsMoyensToConvert = d.substring(0, position).trim();
 
-			return integerFromString(degatsMoyensToConvert);
+			return ConversionsUtils.integerFromString(degatsMoyensToConvert);
 		}
 
-		return integerFromString(d);
-	}
-
-	private Integer integerFromString(String s) {
-		if (s == null) {
-			return null;
-		}
-
-		try {
-			return Integer.parseInt(s.trim());
-		} catch (NumberFormatException e) {
-			logger.debug("Erreur de conversion de '{}' en Integer", s);
-			return null;
-		}
+		return ConversionsUtils.integerFromString(d);
 	}
 }
