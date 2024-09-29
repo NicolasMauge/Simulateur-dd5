@@ -23,18 +23,26 @@ public class Effet {
 	// TODO : est-ce qu'il peut y avoir des états ? modifier effetMalDefini dans ce cas
 
 	public boolean effetMalDefini() {
-		if(test != null && test.testMalDefini()) {
+		if(degats == null || degats.isEmpty()) {
+			logger.debug("Les dégâts doivent être définis dans Effet");
 			return true;
 		}
 
-		if(test != null && (effetEchec == null || effetEchec.effetEchecMalDefini())) {
-			logger.debug("Effet échec est null ou mal défini");
-			return true;
-		}
+		if(test != null) {
+			if (test.testMalDefini()) {
+				return true;
+			}
 
-		if(test != null && (effetReussite == null || effetReussite.effetReussiteMalDefini())) {
-			logger.debug("Effet réussite est null ou mal défini");
-			return true;
+			if (effetEchec == null || effetEchec.effetEchecMalDefini()) {
+				logger.debug("Effet échec est null ou mal défini");
+				return true;
+			}
+
+			// effet réussite est facultatif
+			if (effetReussite != null && effetReussite.effetReussiteMalDefini()) {
+				logger.debug("Effet réussite est mal défini");
+				return true;
+			}
 		}
 
 		return false;

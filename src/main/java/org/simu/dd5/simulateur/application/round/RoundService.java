@@ -28,17 +28,17 @@ public class RoundService {
 
 	public ResultatPlusieursCombat lancePlusieursCombats(Opposant opposantA, Opposant opposantB, int nombreCombats) throws Exception {
 		if (opposantA == null || opposantB == null) {
-			logger.warn("Un des opposants est null : {}, {}", opposantA, opposantB);
+			logger.debug("Un des opposants est null : {}, {}", opposantA, opposantB);
 			return null;
 		}
 
 		if(choixAttaque.choisiUneAttaque(opposantA) == null) {
-			logger.warn("Il n'y a pas d'attaque avec toucher pour {}", opposantA);
+			logger.debug("Il n'y a pas d'attaque avec toucher pour {}", opposantA);
 			return null;
 		}
 
 		if(choixAttaque.choisiUneAttaque(opposantB) == null) {
-			logger.warn("Il n'y a pas d'attaque avec toucher pour {}", opposantB);
+			logger.debug("Il n'y a pas d'attaque avec toucher pour {}", opposantB);
 			return null;
 		}
 
@@ -64,7 +64,7 @@ public class RoundService {
 
 	public ResultatCombat lanceLeCombat(Opposant opposantA, Opposant opposantB) throws Exception {
 		if (opposantA == null || opposantB == null) {
-			logger.warn("Un des opposants est null : {}, {}", opposantA, opposantB);
+			logger.debug("Un des opposants est null : {}, {}", opposantA, opposantB);
 			return null;
 		}
 
@@ -122,7 +122,7 @@ public class RoundService {
 		return null;
 	}
 
-	private void demiRound(Opposant attaquant, Opposant defenseur) throws Exception {
+	private void demiRound(Opposant attaquant, Opposant defenseur) {
 		Attaque attaque = choixAttaque.choisiUneAttaque(attaquant);
 
 		if(!attaquant.estNeutralise() && !attaquant.estIncapableDAgir()) {

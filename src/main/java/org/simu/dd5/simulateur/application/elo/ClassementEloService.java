@@ -22,7 +22,7 @@ public class ClassementEloService {
 		int score2 = gagnant == opposantB.getUuid() ? 1 : 0;
 
 		if(score1 == 0 && score2 == 0) {
-			logger.warn("L'uuid ({}) n'était pas parmi les uuid des opposants", gagnant);
+			logger.debug("L'uuid ({}) n'était pas parmi les uuid des opposants", gagnant);
 			return;
 		}
 

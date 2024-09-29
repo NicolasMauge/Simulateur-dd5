@@ -24,10 +24,10 @@ public class JetSauvegardeJsonToJetSauvegardeMapper {
 				return new JetSauvegarde(competence, dd);
 			}
 		} catch(IllegalArgumentException e) {
-			logger.warn("La compétence ({}) n'existe pas", jetSauvegardeJson.getCompetence().toLowerCase());
+			logger.debug("La compétence ({}) n'existe pas", jetSauvegardeJson.getCompetence().toLowerCase());
 			return null;
 		}
-		logger.warn("La compétence ({}) ou le degré de difficulté ({}) ne sont pas convertible", jetSauvegardeJson.getCompetence(), jetSauvegardeJson.getDd());
+		logger.debug("La compétence ({}) ou le degré de difficulté ({}) ne sont pas convertible", jetSauvegardeJson.getCompetence(), jetSauvegardeJson.getDd());
 		return null;
 	}
 
@@ -39,7 +39,7 @@ public class JetSauvegardeJsonToJetSauvegardeMapper {
 		try {
 			return Integer.parseInt(s.trim());
 		} catch (NumberFormatException e) {
-			logger.warn("Erreur de conversion de {} en Integer", s);
+			logger.debug("Erreur de conversion de {} en Integer", s);
 			return null;
 		}
 	}

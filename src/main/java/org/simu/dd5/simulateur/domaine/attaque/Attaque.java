@@ -25,16 +25,20 @@ public class Attaque {
 	private EffetReussite effetReussite;
 
 	public boolean estNonCoherente() {
-		if(test == null || test.testMalDefini()) {
-			logger.debug("Il n'y a pas de test dans l'attaque");
+		// TODO : à voir si cette règle est cohérente avec les traits
+		if(test == null || test.testMalDefini() || effetMalDefini()) {
 			return true;
 		}
 
-		if(effetMalDefini()) {
+		if(effetEchec != null && effetEchec.effetEchecMalDefini()) {
 			return true;
 		}
 
 		return false;
+	}
+
+	public boolean estCoherente() {
+		return !estNonCoherente();
 	}
 
 	private boolean effetMalDefini() {
@@ -59,7 +63,6 @@ public class Attaque {
 				}
 
 				// ce n'est pas grave si Effet Réussite est mal rempli
-
 				yield false;
 			}
 			case TRAITS -> false;
@@ -73,5 +76,9 @@ public class Attaque {
 		}
 
 		return TypeAttaque.NON_DEFINIE;
+	}
+
+	public boolean estUneAttaqueAvecToucher() {
+		return estDeQuelType()==TypeAttaque.ATTAQUE_AVEC_TOUCHER;
 	}
 }

@@ -108,5 +108,22 @@ public class Opposant {
 	public void reinitialiseSituation() {
 		situationOpposant = new SituationOpposant(pointDeVie!=null?pointDeVie:-1, new HashMap<>(), new HashMap<>(), 0);
 	}
+
+	public boolean complet() {
+		if(classeArmure == null) {
+			return false;
+		}
+
+		List<Attaque> reliquat = listeAttaques
+				.stream()
+				.filter(Attaque::estCoherente)
+				.toList();
+
+		return !reliquat.isEmpty();
+	}
+
+	public boolean aAuMoinsUneAttaqueAvecToucher() {
+		return listeAttaques.stream().anyMatch(Attaque::estUneAttaqueAvecToucher);
+	}
 }
 

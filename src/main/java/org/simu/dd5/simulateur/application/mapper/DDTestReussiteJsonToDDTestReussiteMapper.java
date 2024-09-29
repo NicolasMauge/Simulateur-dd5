@@ -39,7 +39,7 @@ public class DDTestReussiteJsonToDDTestReussiteMapper {
 		try {
 			return Integer.parseInt(s.trim());
 		} catch (NumberFormatException e) {
-			logger.warn("Erreur de conversion de {} en Integer", s);
+			logger.debug("Erreur de conversion de {} en Integer", s);
 			return null;
 		}
 	}

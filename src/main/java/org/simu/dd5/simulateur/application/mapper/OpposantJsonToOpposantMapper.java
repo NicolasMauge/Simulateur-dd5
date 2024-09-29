@@ -84,7 +84,7 @@ public class OpposantJsonToOpposantMapper {
 		try {
 			return EtatEnum.fromValeur(sNettoye);
 		} catch (IllegalArgumentException e) {
-			logger.warn("Erreur de conversion de {} en EtatEnum", sNettoye);
+			logger.debug("Erreur de conversion de {} en EtatEnum", sNettoye);
 		}
 
 		return null;
@@ -99,7 +99,7 @@ public class OpposantJsonToOpposantMapper {
 			return integerFromString(vieToConvert);
 		}
 
-		logger.warn("Il n'y a pas de parenthèse dans {}", vie);
+		logger.debug("Il n'y a pas de parenthèse dans {}", vie);
 		return null;
 	}
 
@@ -111,7 +111,7 @@ public class OpposantJsonToOpposantMapper {
 		try {
 			return Integer.parseInt(s.trim());
 		} catch (NumberFormatException e) {
-			logger.warn("Erreur de conversion de {} en Integer", s);
+			logger.debug("Erreur de conversion de {} en Integer", s);
 			return null;
 		}
 	}

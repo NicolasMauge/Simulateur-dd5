@@ -24,6 +24,11 @@ public enum EtatEnum {
 	AGRIPPE("agrippé"),
 	EPUISE("épuisé"),
 	INVISIBLE("invisible"),
+	MALADIE("maladie"),
+	REPOUSSE("repoussé"),
+	AFFAIBLI("affaibli"),
+	NEUTRALISE("neutralisé"),
+	TOMBER_A_ZERO_PV("tomber à 0 point de vie"),
 	SANS_CONDITION("pas de condition particulière");
 
 	private final String etat;

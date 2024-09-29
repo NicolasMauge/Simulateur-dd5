@@ -1,9 +1,6 @@
 package org.simu.dd5.simulateur.application.attaque;
 
 import lombok.AllArgsConstructor;
-import org.simu.dd5.simulateur.application.aleatoire.D20Service;
-import org.simu.dd5.simulateur.application.avantages.AvantageService;
-import org.simu.dd5.simulateur.application.degats.DegatsService;
 import org.simu.dd5.simulateur.application.effet.EffetService;
 import org.simu.dd5.simulateur.domaine.attaque.Attaque;
 import org.simu.dd5.simulateur.domaine.opposant.Opposant;
@@ -25,7 +22,7 @@ public class AttaqueService {
 	public ResultatAttaque lanceAttaque(Attaque attaque, Opposant attaquant, Opposant defenseur) {
 		// est-ce que c'est une attaque avec touche ?
 		if (attaque.estNonCoherente()) {
-			logger.warn("L'attaque choisie n'est pas cohérente");
+			logger.debug("L'attaque choisie n'est pas cohérente");
 			return null;
 		}
 

@@ -30,7 +30,7 @@ public class EtatsFromString {
 		try {
 			return EtatEnum.fromValeur(etat.trim());
 		} catch (IllegalArgumentException e) {
-			logger.warn("L'état {} n'a pas été converti", etat);
+			logger.debug("L'état {} n'a pas été converti", etat);
 			return null;
 		}
 	}

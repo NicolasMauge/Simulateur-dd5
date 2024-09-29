@@ -54,7 +54,7 @@ public class CaracteristiquesFromString {
 			try {
 				return Integer.parseInt(caracteristiqueToConvert);
 			} catch (NumberFormatException e) {
-				logger.warn("Erreur de conversion de {} en Integer", caracteristiqueToConvert);
+				logger.debug("Erreur de conversion de {} en Integer", caracteristiqueToConvert);
 				return null;
 			}
 		}
@@ -62,7 +62,7 @@ public class CaracteristiquesFromString {
 		try {
 			return Integer.parseInt(caracteristique);
 		} catch (NumberFormatException e) {
-			logger.warn("Erreur de conversion de {} en Integer", caracteristique);
+			logger.debug("Erreur de conversion de {} en Integer", caracteristique);
 			return null;
 		}
 	}

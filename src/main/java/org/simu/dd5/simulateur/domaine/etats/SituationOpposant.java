@@ -27,8 +27,8 @@ public class SituationOpposant {
 		return etatsMap.keySet()
 				.stream()
 				.anyMatch(c -> switch (c) {
-					case EMPOISONNE, ENTRAVE, A_TERRE, SANS_CONDITION, EFFRAYE, AGRIPPE, ASSOURDI, EPUISE, INVISIBLE -> false;
-					case AVEUGLE, ETOURDI, PARALYSE, PETRIFIE, CHARME, INCONSCIENT -> true;
+					case EMPOISONNE, ENTRAVE, A_TERRE, SANS_CONDITION, EFFRAYE, AGRIPPE, ASSOURDI, EPUISE, INVISIBLE, AFFAIBLI, MALADIE, REPOUSSE -> false;
+					case AVEUGLE, ETOURDI, PARALYSE, PETRIFIE, CHARME, INCONSCIENT, NEUTRALISE, TOMBER_A_ZERO_PV -> true;
 				});
 	}
 
@@ -52,12 +52,15 @@ public class SituationOpposant {
 	}
 
 	private boolean aUnEtatQuiLeDesavantage() {
+		// en tant qu'attaquant
 		// on considère que tout désavantage est prioritaire : c'est pourquoi on utilise un anyMatch
 		return etatsMap.keySet()
 				.stream()
 				.anyMatch(c -> switch(c) {
-					case EMPOISONNE, ENTRAVE, A_TERRE, EFFRAYE, EPUISE -> true;
-					case AVEUGLE, ETOURDI, PARALYSE, PETRIFIE, CHARME, INCONSCIENT, SANS_CONDITION, AGRIPPE, ASSOURDI, INVISIBLE -> false;
+					case EMPOISONNE, ENTRAVE, A_TERRE, EFFRAYE, EPUISE, MALADIE, AFFAIBLI,
+						 NEUTRALISE, TOMBER_A_ZERO_PV, REPOUSSE, AVEUGLE, ETOURDI, PARALYSE,
+						 PETRIFIE, INCONSCIENT -> true;
+					case CHARME, SANS_CONDITION, AGRIPPE, ASSOURDI, INVISIBLE -> false;
 				});
 	}
 
@@ -65,7 +68,8 @@ public class SituationOpposant {
 		return etatsMap.keySet()
 				.stream()
 				.anyMatch(c -> switch (c) {
-					case AVEUGLE, PARALYSE, ENTRAVE, ETOURDI, PETRIFIE, A_TERRE, INCONSCIENT, EPUISE -> true;
+					case AVEUGLE, PARALYSE, ENTRAVE, ETOURDI, PETRIFIE, A_TERRE, INCONSCIENT, EPUISE,
+						 MALADIE, AFFAIBLI, NEUTRALISE, TOMBER_A_ZERO_PV, REPOUSSE -> true;
 					case EMPOISONNE, CHARME, SANS_CONDITION, EFFRAYE, AGRIPPE, ASSOURDI, INVISIBLE -> false;
 				});
 	}

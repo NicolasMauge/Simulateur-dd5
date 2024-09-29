@@ -52,34 +52,54 @@ public class ChargementController {
 			opposantListe = chargementService.chargeOpposants();
 		}
 
-		if (antagonistesListe == null || antagonistesListe.isEmpty()) {
-			antagonistesListe = new ArrayList<>();
-			for (int i = 0; i < opposantListe.size(); i++) {
-				for (int j = 0; j < i; j++) {
-					antagonistesListe.add(new Antagonistes(opposantListe.get(i), opposantListe.get(j)));
-				}
-			}
-		}
-
-		//assert antagonistesListe != null;
-		Collections.shuffle(antagonistesListe);
-
-		int compteur = 0;
-		//for(int i=0;i<5;i++) { // nombre de saisons de combats
-		for (Antagonistes antagonistes : antagonistesListe) {
-			roundService.lancePlusieursCombats(antagonistes.getOpposantA(), antagonistes.getOpposantB(), 1);
-			compteur += 1;
-//				if(compteur == 100) {
-//					return;
-//				}
-		}
-		//}
-
-		opposantListe
+		// TODO : pour l'instant, on n'utilise que des attaques avec toucher
+		opposantListe = opposantListe
 				.stream()
-				.filter(Objects::nonNull)
-				.sorted(Comparator.comparing(Opposant::getClassementELO).reversed())
-				.toList()
-				.forEach(o -> System.out.println(o.getNom() + " : " + o.getClassementELO()));
+				.filter(Opposant::aAuMoinsUneAttaqueAvecToucher)
+				.toList();
+
+		Opposant specifique = opposantListe.stream().filter(o -> o.getNom().equals("Remorhaz")).findFirst().orElse(null);
+
+		System.out.println(specifique);
+
+		assert specifique != null;
+		System.out.println(specifique.complet());
+
+		System.out.println("au moins une attaque avec toucher");
+		System.out.println(specifique.aAuMoinsUneAttaqueAvecToucher());
+
+		System.out.println("La cohérence des attaques");
+		specifique.getListeAttaques().forEach(a -> System.out.println(a.estCoherente()));
+
+
+//		if (antagonistesListe == null || antagonistesListe.isEmpty()) {
+//			antagonistesListe = new ArrayList<>();
+//			for (int i = 0; i < opposantListe.size(); i++) {
+//				for (int j = 0; j < i; j++) {
+//					antagonistesListe.add(new Antagonistes(opposantListe.get(i), opposantListe.get(j)));
+//				}
+//			}
+//		}
+//
+//		//assert antagonistesListe != null;
+//		Collections.shuffle(antagonistesListe);
+//
+//		int compteur = 0;
+//		//for(int i=0;i<5;i++) { // nombre de saisons de combats
+//		for (Antagonistes antagonistes : antagonistesListe) {
+//			roundService.lancePlusieursCombats(antagonistes.getOpposantA(), antagonistes.getOpposantB(), 1);
+//			compteur += 1;
+////				if(compteur == 100) {
+////					return;
+////				}
+//		}
+//		//}
+//
+//		opposantListe
+//				.stream()
+//				.filter(Objects::nonNull)
+//				.sorted(Comparator.comparing(Opposant::getClassementELO).reversed())
+//				.toList()
+//				.forEach(o -> System.out.println(o.getNom() + " : " + o.getClassementELO()));
 	}
 }

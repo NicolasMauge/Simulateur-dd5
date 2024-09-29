@@ -45,7 +45,7 @@ public class DegatsFromString {
 		try {
 			return TypeDegatEnum.fromValeur(sNettoye);
 		} catch (IllegalArgumentException e) {
-			logger.warn("Erreur de conversion de '{}' en TypeDegatEnum", sNettoye);
+			logger.debug("Erreur de conversion de '{}' en TypeDegatEnum", sNettoye);
 		}
 
 		return null;
@@ -55,14 +55,14 @@ public class DegatsFromString {
 		TypeDegatEnum typeDegat = convertitStringToTypeDegatEnum(degatsJson.getTypeDegats());
 
 		if(typeDegat == null) {
-			logger.warn("Le type de dégât ({}) n'a pas été reconnu", degatsJson.getTypeDegats());
+			logger.debug("Le type de dégât ({}) n'a pas été reconnu", degatsJson.getTypeDegats());
 			return null;
 		}
 
 		Integer valeurMoyenneDegat = valeurMoyenneDegat(degatsJson.getValeurDegats());
 
 		if (valeurMoyenneDegat == null) {
-			logger.warn("La valeur moyenne des dégâts est null : {}", degatsJson);
+			logger.debug("La valeur moyenne des dégâts est null : {}", degatsJson);
 			return null;
 		}
 
@@ -146,7 +146,7 @@ public class DegatsFromString {
 		try {
 			return Integer.parseInt(s.trim());
 		} catch (NumberFormatException e) {
-			logger.warn("Erreur de conversion de '{}' en Integer", s);
+			logger.debug("Erreur de conversion de '{}' en Integer", s);
 			return null;
 		}
 	}

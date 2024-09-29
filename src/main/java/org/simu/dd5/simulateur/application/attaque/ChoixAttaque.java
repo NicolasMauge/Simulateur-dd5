@@ -9,12 +9,9 @@ public class ChoixAttaque {
 	public Attaque choisiUneAttaque(Opposant opposant) {
 		return opposant.getListeAttaques()
 				.stream()
-				.filter(this::estAttaqueAvecToucher)
+				.filter(Attaque::estCoherente)
+				.filter(Attaque::estUneAttaqueAvecToucher)
 				.findFirst()
 				.orElse(null);
-	}
-
-	private boolean estAttaqueAvecToucher(Attaque attaque) {
-		return attaque.getTest() != null && attaque.getTest().getBonusToucher() != null;
 	}
 }

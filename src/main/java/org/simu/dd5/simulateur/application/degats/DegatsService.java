@@ -19,7 +19,7 @@ public class DegatsService {
 
 	public SousResultatAttaque quelDegats(ResultatTestDDEnum resultatTest, Map<TypeDegatEnum, Degats> degats, Opposant defenseur, boolean degatsAMultiplierParDeux) {
 		if(degats == null || degats.isEmpty()) {
-			logger.warn("Les dégâts sont null");
+			logger.debug("Les dégâts sont null");
 			return null;
 		}
 

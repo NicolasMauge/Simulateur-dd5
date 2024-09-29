@@ -26,7 +26,7 @@ public class CompetencesFromString {
 				.map(parts -> {
 					Integer bonus = convertitStringToInteger(parts[1]);
 					if(bonus == null) {
-						System.out.println(Arrays.stream(parts).toList());
+						logger.debug("Bonus est null : {}", (Object) parts);
 					}
 					CompetenceEnum competenceEnum = convertitStringToCompetenceEnum(parts[0]);
 
@@ -42,7 +42,7 @@ public class CompetencesFromString {
 		try {
 			return Integer.valueOf(s);
 		} catch (IllegalArgumentException e) {
-			logger.warn("Erreur de conversion de {} en Integer", s);
+			logger.debug("Erreur de conversion de {} en Integer", s);
 		}
 
 		return null;
@@ -52,7 +52,7 @@ public class CompetencesFromString {
 		try {
 			return CompetenceEnum.fromValeur(s.toLowerCase());
 		} catch (IllegalArgumentException e) {
-			logger.warn("Erreur de conversion de {} en CompetenceEnum", s);
+			logger.debug("Erreur de conversion de {} en CompetenceEnum", s);
 		}
 
 		return null;
