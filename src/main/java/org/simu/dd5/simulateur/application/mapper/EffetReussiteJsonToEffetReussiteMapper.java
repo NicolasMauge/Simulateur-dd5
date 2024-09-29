@@ -1,8 +1,8 @@
 package org.simu.dd5.simulateur.application.mapper;
 
 import lombok.AllArgsConstructor;
-import org.simu.dd5.simulateur.domaine.degats.EffetReussite;
-import org.simu.dd5.simulateur.domaine.degats.EffetReussiteJson;
+import org.simu.dd5.simulateur.domaine.effet.EffetReussite;
+import org.simu.dd5.simulateur.domaine.effet.EffetReussiteJson;
 import org.springframework.stereotype.Component;
 
 @Component

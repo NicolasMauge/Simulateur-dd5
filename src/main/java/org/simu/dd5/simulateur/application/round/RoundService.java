@@ -32,15 +32,15 @@ public class RoundService {
 			return null;
 		}
 
-		if(choixAttaque.choisiUneAttaque(opposantA) == null) {
-			logger.debug("Il n'y a pas d'attaque avec toucher pour {}", opposantA);
-			return null;
-		}
+//		if(choixAttaque.choisiPremiereAttaqueAvecToucher(opposantA) == null) {
+//			logger.debug("Il n'y a pas d'attaque avec toucher pour {}", opposantA);
+//			return null;
+//		}
 
-		if(choixAttaque.choisiUneAttaque(opposantB) == null) {
-			logger.debug("Il n'y a pas d'attaque avec toucher pour {}", opposantB);
-			return null;
-		}
+//		if(choixAttaque.choisiPremiereAttaqueAvecToucher(opposantB) == null) {
+//			logger.debug("Il n'y a pas d'attaque avec toucher pour {}", opposantB);
+//			return null;
+//		}
 
 		ResultatPlusieursCombat resultatPlusieursCombat = new ResultatPlusieursCombat(
 				opposantA.getUuid(), opposantA.getNom(),
@@ -123,7 +123,8 @@ public class RoundService {
 	}
 
 	private void demiRound(Opposant attaquant, Opposant defenseur) {
-		Attaque attaque = choixAttaque.choisiUneAttaque(attaquant);
+		//Attaque attaque = choixAttaque.choisiPremiereAttaqueAvecToucher(attaquant);
+		Attaque attaque = choixAttaque.choisiAttaqueAleatoire(attaquant);
 
 		if(!attaquant.estNeutralise() && !attaquant.estIncapableDAgir()) {
 			ResultatAttaque resultatAttaque = attaqueService.lanceAttaque(attaque, attaquant, defenseur);

@@ -1,7 +1,7 @@
 package org.simu.dd5.simulateur.application.etats;
 
 import lombok.AllArgsConstructor;
-import org.simu.dd5.simulateur.domaine.degats.Effet;
+import org.simu.dd5.simulateur.domaine.effet.Effet;
 import org.simu.dd5.simulateur.domaine.etats.typeenum.EtatEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,8 +1,9 @@
-package org.simu.dd5.simulateur.domaine.degats;
+package org.simu.dd5.simulateur.domaine.effet;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import org.simu.dd5.simulateur.domaine.degats.Degats;
 import org.simu.dd5.simulateur.domaine.degats.typeenum.TypeDegatEnum;
 import org.simu.dd5.simulateur.domaine.touche.DDTestReussite;
 import org.slf4j.Logger;
@@ -13,7 +14,7 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 @ToString
-public class Effet {
+public class Effet implements HasEffetEchec {
 	private static final Logger logger = LoggerFactory.getLogger(Effet.class);
 
 	private Map<TypeDegatEnum, Degats> degats;

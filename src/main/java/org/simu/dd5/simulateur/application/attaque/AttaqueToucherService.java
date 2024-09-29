@@ -6,7 +6,7 @@ import org.simu.dd5.simulateur.application.avantages.AvantageService;
 import org.simu.dd5.simulateur.application.degats.DegatsService;
 import org.simu.dd5.simulateur.application.effet.EffetService;
 import org.simu.dd5.simulateur.domaine.attaque.Attaque;
-import org.simu.dd5.simulateur.domaine.degats.Effet;
+import org.simu.dd5.simulateur.domaine.effet.Effet;
 import org.simu.dd5.simulateur.domaine.opposant.Opposant;
 import org.simu.dd5.simulateur.domaine.opposant.typeenum.AvantageEnum;
 import org.simu.dd5.simulateur.domaine.resultat.ResultatAttaque;

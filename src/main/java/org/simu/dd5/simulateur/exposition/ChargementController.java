@@ -1,7 +1,10 @@
 package org.simu.dd5.simulateur.exposition;
 
 import lombok.AllArgsConstructor;
+import org.simu.dd5.simulateur.application.attaque.ChoixAttaque;
 import org.simu.dd5.simulateur.application.chargement.ChargementService;
+import org.simu.dd5.simulateur.application.commun.Affichage;
+import org.simu.dd5.simulateur.application.commun.ToStringPretty;
 import org.simu.dd5.simulateur.application.round.RoundService;
 import org.simu.dd5.simulateur.domaine.opposant.Antagonistes;
 import org.simu.dd5.simulateur.domaine.opposant.Opposant;
@@ -20,6 +23,9 @@ public class ChargementController {
 
 	private final ChargementService chargementService;
 	private final RoundService roundService;
+	private final ToStringPretty toStringPretty;
+	private final ChoixAttaque choixAttaque;
+	private final Affichage affichage;
 
 	private List<Opposant> opposantListe;
 	private List<Antagonistes> antagonistesListe;
@@ -55,51 +61,68 @@ public class ChargementController {
 		// TODO : pour l'instant, on n'utilise que des attaques avec toucher
 		opposantListe = opposantListe
 				.stream()
-				.filter(Opposant::aAuMoinsUneAttaqueAvecToucher)
+				.filter(Opposant::aAuMoinsUneAttaque)
 				.toList();
 
-		Opposant specifique = opposantListe.stream().filter(o -> o.getNom().equals("Remorhaz")).findFirst().orElse(null);
-
-		System.out.println(specifique);
-
-		assert specifique != null;
-		System.out.println(specifique.complet());
-
-		System.out.println("au moins une attaque avec toucher");
-		System.out.println(specifique.aAuMoinsUneAttaqueAvecToucher());
-
-		System.out.println("La cohérence des attaques");
-		specifique.getListeAttaques().forEach(a -> System.out.println(a.estCoherente()));
-
-
-//		if (antagonistesListe == null || antagonistesListe.isEmpty()) {
-//			antagonistesListe = new ArrayList<>();
-//			for (int i = 0; i < opposantListe.size(); i++) {
-//				for (int j = 0; j < i; j++) {
-//					antagonistesListe.add(new Antagonistes(opposantListe.get(i), opposantListe.get(j)));
-//				}
+//		opposantListe.forEach(o -> {
+//			Attaque attaque = choixAttaque.choisiPremiereAttaqueAvecToucher(o);
+//			if(attaque == null) {
+//				logger.error("Nom : {}, attaque nulle", o.getNom());
 //			}
-//		}
-//
-//		//assert antagonistesListe != null;
-//		Collections.shuffle(antagonistesListe);
-//
-//		int compteur = 0;
-//		//for(int i=0;i<5;i++) { // nombre de saisons de combats
-//		for (Antagonistes antagonistes : antagonistesListe) {
-//			roundService.lancePlusieursCombats(antagonistes.getOpposantA(), antagonistes.getOpposantB(), 1);
-//			compteur += 1;
-////				if(compteur == 100) {
-////					return;
-////				}
-//		}
-//		//}
-//
-//		opposantListe
-//				.stream()
-//				.filter(Objects::nonNull)
-//				.sorted(Comparator.comparing(Opposant::getClassementELO).reversed())
-//				.toList()
-//				.forEach(o -> System.out.println(o.getNom() + " : " + o.getClassementELO()));
+//		});
+
+		if (antagonistesListe == null || antagonistesListe.isEmpty()) {
+			antagonistesListe = new ArrayList<>();
+			for (int i = 0; i < opposantListe.size(); i++) {
+				for (int j = 0; j < i; j++) {
+					antagonistesListe.add(new Antagonistes(opposantListe.get(i), opposantListe.get(j)));
+				}
+			}
+		}
+
+		//assert antagonistesListe != null;
+		Collections.shuffle(antagonistesListe);
+
+		int compteur = 0;
+		//for(int i=0;i<5;i++) { // nombre de saisons de combats
+		for (Antagonistes antagonistes : antagonistesListe) {
+			roundService.lancePlusieursCombats(antagonistes.getOpposantA(), antagonistes.getOpposantB(), 1);
+			compteur += 1;
+		}
+		//}
+
+		// affichage.afficheOpposantsClasses(opposantListe);
+		toStringPretty.save_complet(opposantListe);
+
+		// analyse
+		Collections.shuffle(antagonistesListe);
+
+		//for(int i=0;i<5;i++) { // nombre de saisons de combats
+		for (Antagonistes antagonistes : antagonistesListe) {
+			Opposant opposantA = antagonistes.getOpposantA();
+			Opposant opposantB = antagonistes.getOpposantB();
+
+			//if(opposantB)
+		}
+	}
+
+	@GetMapping("/creature/{nomCreature}")
+	public String getCreature(@PathVariable String nomCreature) {
+		if (opposantListe == null || opposantListe.isEmpty()) {
+			opposantListe = chargementService.chargeOpposants();
+		}
+
+		Opposant opposant = opposantListe.stream().filter(o-> o.getNom().equalsIgnoreCase(nomCreature)).findFirst().orElse(null);
+
+		return toStringPretty.cleanJsonFromObject(opposant);
+	}
+
+	@GetMapping("/creatures/save")
+	public void saveCreatures() {
+		if (opposantListe == null || opposantListe.isEmpty()) {
+			opposantListe = chargementService.chargeOpposants();
+		}
+
+		toStringPretty.save_complet(opposantListe);
 	}
 }

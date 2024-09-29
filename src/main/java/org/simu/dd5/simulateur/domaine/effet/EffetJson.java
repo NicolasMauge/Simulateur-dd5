@@ -1,4 +1,4 @@
-package org.simu.dd5.simulateur.domaine.degats;
+package org.simu.dd5.simulateur.domaine.effet;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.simu.dd5.simulateur.domaine.degats.DegatsJson;
 import org.simu.dd5.simulateur.domaine.touche.DDTestReussiteJson;
 
 import java.util.List;

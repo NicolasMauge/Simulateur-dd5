@@ -125,5 +125,9 @@ public class Opposant {
 	public boolean aAuMoinsUneAttaqueAvecToucher() {
 		return listeAttaques.stream().anyMatch(Attaque::estUneAttaqueAvecToucher);
 	}
+
+	public boolean aAuMoinsUneAttaque() {
+		return listeAttaques.stream().anyMatch(Attaque::estUneAttaque);
+	}
 }
 

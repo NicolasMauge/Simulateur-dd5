@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.simu.dd5.simulateur.domaine.degats.EffetEchecJson;
-import org.simu.dd5.simulateur.domaine.degats.EffetJson;
-import org.simu.dd5.simulateur.domaine.degats.EffetReussiteJson;
+import org.simu.dd5.simulateur.domaine.effet.EffetEchecJson;
+import org.simu.dd5.simulateur.domaine.effet.EffetJson;
+import org.simu.dd5.simulateur.domaine.effet.EffetReussiteJson;
 import org.simu.dd5.simulateur.domaine.touche.DDTestReussiteJson;
 
 @Setter

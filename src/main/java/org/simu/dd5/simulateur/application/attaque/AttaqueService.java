@@ -20,6 +20,8 @@ public class AttaqueService {
 	private final AttaqueEvasionService attaqueEvasionService;
 
 	public ResultatAttaque lanceAttaque(Attaque attaque, Opposant attaquant, Opposant defenseur) {
+		logger.debug("{} attaque {}", attaquant.getNom(), defenseur.getNom());
+
 		// est-ce que c'est une attaque avec touche ?
 		if (attaque.estNonCoherente()) {
 			logger.debug("L'attaque choisie n'est pas cohérente");
@@ -42,7 +44,7 @@ public class AttaqueService {
 			case ATTAQUE_AVEC_TOUCHER -> attaqueToucherService.lanceAttaqueAvecToucher(attaque, attaquant, defenseur);
 			case EVASION -> {
 				ResultatTestDDEnum resultatTest = attaqueEvasionService.lancerUnTestEvasion(attaque.getTest(), defenseur);
-				yield new ResultatAttaque(effetService.quelEffetEvasion(resultatTest, attaque.getEffet(), defenseur));
+				yield new ResultatAttaque(effetService.quelEffetEvasion(resultatTest, attaque, defenseur));
 			}
 			case TRAITS -> ResultatAttaque.EST_UN_TRAIT();
 			case NON_DEFINIE -> ResultatAttaque.EN_ECHEC(null);

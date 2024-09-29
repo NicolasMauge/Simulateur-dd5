@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.simu.dd5.simulateur.domaine.attaque.typeenum.TypeAttaque;
-import org.simu.dd5.simulateur.domaine.degats.Effet;
-import org.simu.dd5.simulateur.domaine.degats.EffetEchec;
-import org.simu.dd5.simulateur.domaine.degats.EffetReussite;
+import org.simu.dd5.simulateur.domaine.effet.Effet;
+import org.simu.dd5.simulateur.domaine.effet.EffetEchec;
+import org.simu.dd5.simulateur.domaine.effet.EffetReussite;
+import org.simu.dd5.simulateur.domaine.effet.HasEffetEchec;
 import org.simu.dd5.simulateur.domaine.touche.DDTestReussite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 @Getter
 @AllArgsConstructor
 @ToString
-public class Attaque {
+public class Attaque implements HasEffetEchec {
 	private static final Logger logger = LoggerFactory.getLogger(Attaque.class);
 
 	private String typeAction;
@@ -80,5 +81,14 @@ public class Attaque {
 
 	public boolean estUneAttaqueAvecToucher() {
 		return estDeQuelType()==TypeAttaque.ATTAQUE_AVEC_TOUCHER;
+	}
+
+	public boolean estUneAttaque() {
+		return switch (estDeQuelType()) {
+            case ATTAQUE_AVEC_TOUCHER -> true;
+            case EVASION -> true;
+            case TRAITS -> false;
+            case NON_DEFINIE -> false;
+        };
 	}
 }

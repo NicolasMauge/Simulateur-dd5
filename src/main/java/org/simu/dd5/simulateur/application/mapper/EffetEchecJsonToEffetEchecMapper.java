@@ -2,8 +2,8 @@ package org.simu.dd5.simulateur.application.mapper;
 
 import lombok.AllArgsConstructor;
 import org.simu.dd5.simulateur.domaine.degats.Degats;
-import org.simu.dd5.simulateur.domaine.degats.EffetEchec;
-import org.simu.dd5.simulateur.domaine.degats.EffetEchecJson;
+import org.simu.dd5.simulateur.domaine.effet.EffetEchec;
+import org.simu.dd5.simulateur.domaine.effet.EffetEchecJson;
 import org.simu.dd5.simulateur.domaine.degats.typeenum.TypeDegatEnum;
 import org.simu.dd5.simulateur.domaine.etats.typeenum.EtatEnum;
 import org.springframework.stereotype.Component;

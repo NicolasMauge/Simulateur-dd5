@@ -55,10 +55,10 @@ public class ChargementService {
 		System.out.println(resultatMapping.getErreurMappingListe());
 
 		// filtrage
-		logger.info("Il y a {} créatures suivantes ont été exclues car non complètes", resultatMapping.getOpposantListe().stream()
+		logger.info("Il y a {} créatures exclues car non complètes", resultatMapping.getOpposantListe().stream()
 				.filter(o->!o.complet()).toList().size());
 
-		toStringPretty.save(resultatMapping.getOpposantListe()
+		toStringPretty.save_incomplet(resultatMapping.getOpposantListe()
 				.stream()
 				.filter(o->!o.complet())
 				.toList());
@@ -119,56 +119,5 @@ public class ChargementService {
 		}
 
 		return objectMapper;
-	}
-
-	private boolean filtreOpposant(Opposant opposant) {
-
-//		if (opposant.getClasseArmure() == null) {
-//			logger.warn("On enlève le monstre {} car sa classe d'armure est vide", opposant.getNom());
-//			return false;
-//		}
-//
-//		if (opposant.getListeAttaques().stream().anyMatch(
-//				a -> {
-//					if (a.getTest() != null && a.getTest().getBonusToucher() != null) { // il y a une attaque avec toucher
-//						// mais pas d'effet, ou pas de dégâts
-//						return a.getEffet() == null || a.getEffet().getDegats() == null || a.getEffet().getDegats().isEmpty();
-//					}
-//					return false;})) {
-//			logger.warn("On enlève le monstre {} car il y a des problèmes sur les effets suite une attaque avec toucher", opposant.getNom());
-//
-//			return false;
-//		}
-//
-//		if(opposant.getListeAttaques().stream().anyMatch(
-//				a -> {
-//					if(a.getEffet() != null && a.getEffet().getEffetEchec() != null) {
-//						return a.getEffet().getEffetEchec().getDegats() == null && (a.getEffet().getEffetEchec().getEtatSet() == null || a.getEffet().getEffetEchec().getEtatSet().isEmpty());
-//					}
-//					return false;
-//				}
-//		)) {
-//			logger.warn("On enlève le monstre {} car il y a des problèmes sur les effets échec dans effet d'une attaque toucher", opposant.getNom());
-//
-//			return false;
-//		}
-//
-//		if(opposant.getListeAttaques().stream().anyMatch(
-//				a -> a.getEffet() != null && a.getEffet().getTest() != null && a.getEffet().getTest().getJetSauvegarde() == null
-//		)) {
-//			logger.warn("On enlève le monstre {} car il manque le jet de sauvegarde dans le test", opposant.getNom());
-//
-//			return false;
-//		}
-//
-//		System.out.println(opposant.getNom());
-//
-//		if(opposant.getListeAttaques().stream().anyMatch(
-//				a -> a.getEffet() != null && a.getEffet().getTest() != null && a.getEffet().getEffetEchec() == null
-//		)) {
-//			return false;
-//		}
-
-		return true;
 	}
 }
