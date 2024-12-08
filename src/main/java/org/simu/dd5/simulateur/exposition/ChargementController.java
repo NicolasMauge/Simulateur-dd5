@@ -17,8 +17,6 @@ import org.simu.dd5.simulateur.application.round.RoundService;
 import org.simu.dd5.simulateur.domaine.opposant.Antagonistes;
 import org.simu.dd5.simulateur.domaine.opposant.Opposant;
 import org.simu.dd5.simulateur.domaine.resultat.ResultatPlusieursCombat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -29,9 +27,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/v1")
 public class ChargementController {
-    private static final Logger logger = LoggerFactory.getLogger(ChargementController.class);
-
-    private final ChargementService chargementService;
+	private final ChargementService chargementService;
     private final RoundService roundService;
     private final ToStringPretty toStringPretty;
     private final ChoixAttaque choixAttaque;
@@ -40,8 +36,19 @@ public class ChargementController {
     private List<Opposant> opposantListe;
     private List<Antagonistes> antagonistesListe;
 
-	// TODO : gérer les attaques multiples
-	// TODO : gérer les incantations
+	// TODO : (moyen) gérer les attaques multiples
+	// TODO : (difficile) gérer les incantations
+    // TODO : (simple-python) correction des données manquantes -> dangerosité à partir du tableau DD5e
+    // TODO : (moyen) gérer les traits avantages
+    // TODO : (difficile) actions légendaires
+    // TODO : (difficile) gérer les prédictions
+    // TODO : (difficile) utiliser les prédictions et une méthode stat pour choisir les attaques
+    // TODO : (simple) gérer les immunités d'état
+    // TODO : (moyen) gérer les durées des états
+    // TODO : (moyen) gérer les traits qui permettent de transformer les armes en armes magiques et plus généralement intégrer les armes magiques
+    // TODO : (moyen) gérer les types d'armes (magique, argent, etc.)
+    // TODO : (python) Tant que le poison est actif, la cible est paralysée.
+    // TODO : (python) La cible peut relancer le jet de sauvegarde à la fin de chacun de ses tours, mettant fin à l'effet qui l'affecte en cas de réussite.
     @GetMapping("/charge")
     public void chargement() {
         opposantListe = chargementService.chargeOpposants();
@@ -72,9 +79,9 @@ public class ChargementController {
         opposantListe = opposantListe
                 .stream()
                 .filter(Opposant::aAuMoinsUneAttaque)
-                .toList();
+				.toList();
 
-        if (antagonistesListe == null || antagonistesListe.isEmpty()) {
+		if (antagonistesListe == null || antagonistesListe.isEmpty()) {
             antagonistesListe = new ArrayList<>();
             for (int i = 0; i < opposantListe.size(); i++) {
                 for (int j = 0; j < i; j++) {
@@ -89,12 +96,17 @@ public class ChargementController {
         for (int i = 0; i < 5; i++) { // nombre de saisons de combats
 			System.out.println("Saison " + i);
             for (Antagonistes antagonistes : antagonistesListe) {
-                roundService.lancePlusieursCombats(antagonistes.getOpposantA(), antagonistes.getOpposantB(), 1);
+                roundService.lancePlusieursCombats(antagonistes.opposantA(), antagonistes.opposantB(), 1);
                 compteur += 1;
             }
         }
 
-        toStringPretty.save_complet(opposantListe);
+		opposantListe = opposantListe
+				.stream()
+				.sorted(Comparator.comparing(Opposant::getClassementELO))
+				.toList();
+
+		toStringPretty.save_complet(opposantListe);
 
         // analyse
         Collections.shuffle(antagonistesListe);

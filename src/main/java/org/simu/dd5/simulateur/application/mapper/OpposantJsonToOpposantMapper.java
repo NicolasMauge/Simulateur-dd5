@@ -38,7 +38,6 @@ public class OpposantJsonToOpposantMapper {
 				degatsFromString.getEffetDegatsEnFonctionType(input.getResistancesAuxDegats(), input.getVulnerabilitesAuxDegats(), input.getImmunitesAuxDegats()),
 				getEtatsFromString(input.getImmunitesAuxEtats()),
 				convertDangerosite(input.getDangerosite()),
-				0,
 				mapper.mapToListeAttaque(input.getAttaqueListe()),
 				null,
 				Opposant.INITIAL_ELO

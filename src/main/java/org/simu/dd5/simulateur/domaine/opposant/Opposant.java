@@ -18,6 +18,8 @@ import org.simu.dd5.simulateur.domaine.degats.typeenum.TypeDegatEnum;
 import org.simu.dd5.simulateur.domaine.degats.typeenum.TypeEffetDegatsEnum;
 import org.simu.dd5.simulateur.domaine.general.typeenum.TypeRaceEnum;
 
+import static org.simu.dd5.simulateur.domaine.degats.typeenum.TypeEffetDegatsEnum.EFFET_NORMAL;
+
 @AllArgsConstructor
 @Getter
 @ToString
@@ -45,8 +47,6 @@ public class Opposant {
 	private List<EtatEnum> immuniteEtats;
 
 	private int dangerosite;
-	@Setter
-	private double dangerositeNormee;
 
 	private List<Attaque> listeAttaques;
 
@@ -56,7 +56,7 @@ public class Opposant {
 	private int classementELO;
 
 	public Integer getValeurCaracteristique(CaracteristiqueEnum caracteristique) {
-		return switch(caracteristique) {
+		return switch (caracteristique) {
 			case FOR -> caracteristiques.getModFOR();
 			case DEX -> caracteristiques.getModDEX();
 			case CON -> caracteristiques.getModCON();
@@ -67,7 +67,7 @@ public class Opposant {
 	}
 
 	public Integer getValeurCompetence(CompetenceEnum c) {
-		if(competenceList.containsKey(c)) {
+		if (competenceList.containsKey(c)) {
 			return competenceList.get(c);
 		}
 
@@ -97,24 +97,36 @@ public class Opposant {
 	public Integer quelDegatAjuste(Map.Entry<TypeDegatEnum, Integer> entryTypeDegatEtDegat) {
 		TypeDegatEnum typeDegatEnum = entryTypeDegatEtDegat.getKey();
 
-		if(!effetDegatsEnFonctionType.containsKey(typeDegatEnum)) {
-			return entryTypeDegatEtDegat.getValue();
+		if (effetDegatsEnFonctionType.containsKey(typeDegatEnum)) {
+			return reactionParTypeEffet(effetDegatsEnFonctionType.get(typeDegatEnum), entryTypeDegatEtDegat.getValue());
 		}
 
-		return switch (effetDegatsEnFonctionType.get(typeDegatEnum)) {
-			case RESISTANCE -> entryTypeDegatEtDegat.getValue()/2;
-			case VULNERABILITE -> entryTypeDegatEtDegat.getValue()*2;
+		// pour gérer les immunités, résistances et vulnérabilités complexes (CPT_xxx par exemple)
+		TypeEffetDegatsEnum entryTypeEffetDegats = effetDegatsEnFonctionType.entrySet()
+				.stream()
+				.filter(e -> e.getKey().contient(typeDegatEnum)) // pour gérer les CPT_xxx
+				.map(Map.Entry::getValue)
+				.findFirst()
+				.orElse(EFFET_NORMAL);
+
+		return reactionParTypeEffet(entryTypeEffetDegats, entryTypeDegatEtDegat.getValue());
+	}
+
+	private Integer reactionParTypeEffet(TypeEffetDegatsEnum typeEffetDegatsEnum, Integer degat) {
+		return switch (typeEffetDegatsEnum) {
+			case RESISTANCE -> degat / 2;
+			case VULNERABILITE -> degat * 2;
 			case IMMUNITE -> 0;
-			case EFFET_NORMAL -> entryTypeDegatEtDegat.getValue();
+			case EFFET_NORMAL -> degat;
 		};
 	}
 
 	public void reinitialiseSituation() {
-		situationOpposant = new SituationOpposant(pointDeVie!=null?pointDeVie:-1, new HashMap<>(), new HashMap<>(), 0);
+		situationOpposant = new SituationOpposant(pointDeVie != null ? pointDeVie : -1, new HashMap<>(), new HashMap<>(), 0);
 	}
 
 	public boolean complet() {
-		if(classeArmure == null) {
+		if (classeArmure == null) {
 			return false;
 		}
 

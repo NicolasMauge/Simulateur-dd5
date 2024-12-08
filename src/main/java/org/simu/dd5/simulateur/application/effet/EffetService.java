@@ -1,7 +1,6 @@
 package org.simu.dd5.simulateur.application.effet;
 
 import lombok.AllArgsConstructor;
-import org.simu.dd5.simulateur.application.aleatoire.D20Service;
 import org.simu.dd5.simulateur.application.degats.DegatsService;
 import org.simu.dd5.simulateur.domaine.effet.EffetEchec;
 import org.simu.dd5.simulateur.domaine.effet.EffetReussite;
@@ -39,7 +38,7 @@ public class EffetService {
 
 		if(effetEchec.getEtatSet() != null && !effetEchec.getEtatSet().isEmpty()) {
 			if(sousResultatAttaque == null) {
-				System.out.println("bizz");
+				throw new RuntimeException();
 			}
 			sousResultatAttaque.ajoutDesEtats(effetEchec.getEtatSet());
 		}
