@@ -31,11 +31,7 @@ public class Attaque implements HasEffetEchec {
 			return true;
 		}
 
-		if(effetEchec != null && effetEchec.effetEchecMalDefini()) {
-			return true;
-		}
-
-		return false;
+		return effetEchec != null && effetEchec.effetEchecMalDefini();
 	}
 
 	public boolean estCoherente() {
@@ -85,10 +81,8 @@ public class Attaque implements HasEffetEchec {
 
 	public boolean estUneAttaque() {
 		return switch (estDeQuelType()) {
-            case ATTAQUE_AVEC_TOUCHER -> true;
-            case EVASION -> true;
-            case TRAITS -> false;
-            case NON_DEFINIE -> false;
-        };
+            case ATTAQUE_AVEC_TOUCHER, EVASION -> true;
+			case TRAITS, NON_DEFINIE -> false;
+		};
 	}
 }

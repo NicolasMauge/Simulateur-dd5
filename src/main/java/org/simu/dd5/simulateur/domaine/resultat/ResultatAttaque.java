@@ -4,7 +4,6 @@ import lombok.*;
 import org.simu.dd5.simulateur.domaine.resultat.typeenum.ResultatTestDDEnum;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @ToString
 public class ResultatAttaque {
